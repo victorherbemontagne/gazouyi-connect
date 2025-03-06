@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [profileData, setProfileData] = useState<any>(null);
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [activeStep, setActiveStep] = useState(1);
+  const [experiencesCount, setExperiencesCount] = useState(0);
 
   const handleSignOut = async () => {
     await signOut();
@@ -94,7 +95,18 @@ export default function Dashboard() {
       }
       
       setProfileData(profile);
-      calculateCompletionPercentage(profile);
+      
+      // Fetch experiences count
+      const { count, error: countError } = await supabase
+        .from('professional_experiences')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+      
+      if (countError) throw countError;
+      
+      setExperiencesCount(count || 0);
+      
+      calculateCompletionPercentage(profile, count || 0);
     } catch (error: any) {
       console.error('Error fetching profile:', error.message);
       toast({
@@ -107,7 +119,7 @@ export default function Dashboard() {
     }
   };
 
-  const calculateCompletionPercentage = (data: any) => {
+  const calculateCompletionPercentage = (data: any, experiencesCount: number) => {
     if (!data) return 0;
     
     let completed = 0;
@@ -130,6 +142,13 @@ export default function Dashboard() {
       total += 3;
     }
     total += 1;
+    
+    // Expériences professionnelles
+    if (experiencesCount > 0) {
+      // Ajouter des points pour chaque expérience, avec un maximum de 3 expériences comptabilisées
+      completed += Math.min(experiencesCount, 3);
+    }
+    total += 3; // On considère que l'idéal est d'avoir au moins 3 expériences
     
     const percentage = Math.round((completed / total) * 100);
     setCompletionPercentage(percentage);

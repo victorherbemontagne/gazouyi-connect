@@ -149,6 +149,39 @@ export type Database = {
           },
         ]
       }
+      professional_experiences: {
+        Row: {
+          company_name: string | null
+          created_at: string | null
+          id: string
+          job_description: string | null
+          job_duration: string | null
+          job_title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string | null
+          id?: string
+          job_description?: string | null
+          job_duration?: string | null
+          job_title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string | null
+          id?: string
+          job_description?: string | null
+          job_duration?: string | null
+          job_title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
