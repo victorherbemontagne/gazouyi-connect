@@ -24,21 +24,64 @@ export default function Dashboard() {
     navigate('/');
   };
 
+  const createProfileIfNotExists = async () => {
+    if (!user?.id) return null;
+    
+    try {
+      // Check if profile exists
+      const { data, error } = await supabase
+        .from('candidate_profiles')
+        .select('*')
+        .eq('id', user.id);
+        
+      if (error) throw error;
+      
+      // If no profile exists, create one
+      if (!data || data.length === 0) {
+        console.log('Creating new profile for user', user.id);
+        const { data: newProfile, error: insertError } = await supabase
+          .from('candidate_profiles')
+          .insert([
+            { 
+              id: user.id,
+              profile_completion_percentage: 0,
+              first_name: user.user_metadata?.first_name || '',
+              last_name: user.user_metadata?.last_name || ''
+            }
+          ])
+          .select();
+          
+        if (insertError) throw insertError;
+        return newProfile?.[0] || null;
+      }
+      
+      return data[0];
+    } catch (error: any) {
+      console.error('Error creating profile:', error.message);
+      toast({
+        title: "Erreur",
+        description: "Impossible de créer votre profil.",
+        variant: "destructive",
+      });
+      return null;
+    }
+  };
+
   const fetchProfileData = async () => {
     if (!user?.id) return;
 
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('candidate_profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
-
-      if (error) throw error;
       
-      setProfileData(data);
-      calculateCompletionPercentage(data);
+      // Get or create profile
+      const profile = await createProfileIfNotExists();
+      
+      if (!profile) {
+        throw new Error("Impossible de récupérer ou créer le profil");
+      }
+      
+      setProfileData(profile);
+      calculateCompletionPercentage(profile);
     } catch (error: any) {
       console.error('Error fetching profile:', error.message);
       toast({
