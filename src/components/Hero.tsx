@@ -22,7 +22,7 @@ const Hero = ({ className }: HeroProps) => {
         </div>
         
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gazouyi-900 mb-6 hero-text">
-          Mettez en valeur votre expertise dans la petite enfance
+          Mettez en avant vos compétences dans la petite enfance
         </h1>
         
         <p className="text-lg md:text-xl text-gazouyi-700 mb-10 max-w-2xl mx-auto hero-text">
