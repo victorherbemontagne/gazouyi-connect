@@ -37,11 +37,11 @@ const Index = () => {
             <a href="#" className="text-gazouyi-700 hover:text-gazouyi-900 transition-colors">
               VAE
             </a>
-            <Button href="#features" icon>
+            <Button href="/create-profile" icon>
               Démarrer
             </Button>
           </nav>
-          <Button href="#features" className="md:hidden">
+          <Button href="/create-profile" className="md:hidden">
             Démarrer
           </Button>
         </div>
@@ -97,7 +97,7 @@ const Index = () => {
               Rejoignez la communauté Gazouyi Connect et créez votre page professionnelle 
               en quelques minutes. C'est simple, rapide et valorisant !
             </p>
-            <Button href="#features" icon className="text-lg px-8 py-4">
+            <Button href="/create-profile" icon className="text-lg px-8 py-4">
               Démarrer maintenant
             </Button>
           </div>
