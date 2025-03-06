@@ -11,27 +11,51 @@ export type Database = {
     Tables: {
       candidate_profiles: {
         Row: {
+          city: string | null
           created_at: string | null
+          current_job_description: string | null
+          current_job_duration: string | null
+          current_job_title: string | null
+          currently_employed: boolean | null
+          department: string | null
           first_name: string | null
           id: string
           last_name: string | null
           phone: string | null
+          profile_completion_percentage: number | null
+          profile_photo_url: string | null
           updated_at: string | null
         }
         Insert: {
+          city?: string | null
           created_at?: string | null
+          current_job_description?: string | null
+          current_job_duration?: string | null
+          current_job_title?: string | null
+          currently_employed?: boolean | null
+          department?: string | null
           first_name?: string | null
           id: string
           last_name?: string | null
           phone?: string | null
+          profile_completion_percentage?: number | null
+          profile_photo_url?: string | null
           updated_at?: string | null
         }
         Update: {
+          city?: string | null
           created_at?: string | null
+          current_job_description?: string | null
+          current_job_duration?: string | null
+          current_job_title?: string | null
+          currently_employed?: boolean | null
+          department?: string | null
           first_name?: string | null
           id?: string
           last_name?: string | null
           phone?: string | null
+          profile_completion_percentage?: number | null
+          profile_photo_url?: string | null
           updated_at?: string | null
         }
         Relationships: []

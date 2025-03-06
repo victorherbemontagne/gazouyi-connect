@@ -1,16 +1,126 @@
 
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import ProfileCompletion from '@/components/ProfileCompletion';
+import PersonalInfoForm from '@/components/PersonalInfoForm';
+import ProfessionalInfoForm from '@/components/ProfessionalInfoForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from '@/hooks/use-toast';
 
 export default function Dashboard() {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState<any>(null);
+  const [completionPercentage, setCompletionPercentage] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
   };
+
+  const fetchProfileData = async () => {
+    if (!user?.id) return;
+
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('candidate_profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      
+      setProfileData(data);
+      calculateCompletionPercentage(data);
+    } catch (error: any) {
+      console.error('Error fetching profile:', error.message);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger votre profil.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateCompletionPercentage = (data: any) => {
+    if (!data) return 0;
+    
+    let completed = 0;
+    let total = 0;
+    
+    // Informations personnelles
+    if (data.first_name) completed++;
+    if (data.last_name) completed++;
+    if (data.city) completed++;
+    if (data.department) completed++;
+    if (data.profile_photo_url) completed++;
+    total += 5;
+    
+    // Informations professionnelles
+    if (data.currently_employed !== null) completed++;
+    if (data.currently_employed) {
+      if (data.current_job_title) completed++;
+      if (data.current_job_duration) completed++;
+      if (data.current_job_description) completed++;
+      total += 3;
+    }
+    total += 1;
+    
+    const percentage = Math.round((completed / total) * 100);
+    setCompletionPercentage(percentage);
+    
+    // Mettre à jour le pourcentage dans la base de données
+    updateCompletionPercentage(percentage);
+    
+    return percentage;
+  };
+
+  const updateCompletionPercentage = async (percentage: number) => {
+    if (!user?.id) return;
+    
+    try {
+      await supabase
+        .from('candidate_profiles')
+        .update({ profile_completion_percentage: percentage })
+        .eq('id', user.id);
+    } catch (error) {
+      console.error('Error updating completion percentage:', error);
+    }
+  };
+
+  const handleStepComplete = () => {
+    fetchProfileData();
+    
+    // Passer à l'étape suivante si ce n'est pas la dernière
+    if (activeStep < 2) {
+      setActiveStep(activeStep + 1);
+    } else {
+      toast({
+        title: "Profil complété !",
+        description: "Toutes les étapes ont été complétées avec succès.",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchProfileData();
+    }
+  }, [user]);
+
+  const steps = [
+    { id: 1, name: 'Informations personnelles', completed: completionPercentage >= 30 },
+    { id: 2, name: 'Informations professionnelles', completed: completionPercentage >= 60 },
+  ];
 
   return (
     <div className="min-h-screen bg-gazouyi-50">
@@ -29,25 +139,64 @@ export default function Dashboard() {
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-gazouyi-900 mb-8">Votre espace personnel</h1>
           
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gazouyi-800 mb-4">Bienvenue !</h2>
-            <p className="text-gazouyi-600 mb-4">
-              Vous êtes maintenant connecté à votre espace personnel. Ici, vous pourrez créer et gérer votre page professionnelle.
-            </p>
-            <div className="bg-gazouyi-50 p-4 rounded-md">
-              <p className="text-sm text-gazouyi-500">Email : {user?.email}</p>
+          {loading ? (
+            <div className="flex justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gazouyi-500"></div>
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gazouyi-800 mb-4">Prochaines étapes</h2>
-            <p className="text-gazouyi-600 mb-6">
-              Complétez votre profil professionnel en plusieurs étapes pour créer une page qui vous représente.
-            </p>
-            <Button className="bg-gazouyi-600 hover:bg-gazouyi-700">
-              Commencer mon profil
-            </Button>
-          </div>
+          ) : (
+            <>
+              <ProfileCompletion percentage={completionPercentage} />
+              
+              <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+                <Tabs defaultValue={`step-${activeStep}`} onValueChange={(value) => setActiveStep(parseInt(value.split('-')[1]))}>
+                  <TabsList className="grid w-full grid-cols-2 mb-8">
+                    <TabsTrigger 
+                      value="step-1" 
+                      disabled={!steps[0].completed && activeStep !== 1}
+                      className={steps[0].completed ? "text-green-500" : ""}
+                    >
+                      Étape 1: Informations personnelles
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="step-2" 
+                      disabled={!steps[1].completed && activeStep !== 2 && !steps[0].completed}
+                      className={steps[1].completed ? "text-green-500" : ""}
+                    >
+                      Étape 2: Informations professionnelles
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="step-1" className="mt-0">
+                    <PersonalInfoForm 
+                      initialData={profileData} 
+                      onComplete={handleStepComplete}
+                      calculateCompletion={fetchProfileData}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="step-2" className="mt-0">
+                    <ProfessionalInfoForm 
+                      initialData={profileData}
+                      onComplete={handleStepComplete}
+                      calculateCompletion={fetchProfileData}
+                    />
+                  </TabsContent>
+                </Tabs>
+              </div>
+              
+              {completionPercentage === 100 && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                  <h3 className="text-xl font-semibold text-green-800 mb-2">Félicitations !</h3>
+                  <p className="text-green-700">
+                    Votre profil est complet ! Vous pouvez maintenant accéder à toutes les fonctionnalités de la plateforme.
+                  </p>
+                  <Button className="mt-4 bg-green-600 hover:bg-green-700">
+                    Voir mon profil public
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </main>
     </div>
