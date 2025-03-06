@@ -12,6 +12,7 @@ export function useProfileManager() {
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [activeStep, setActiveStep] = useState(1);
   const [experiencesCount, setExperiencesCount] = useState(0);
+  const [academicCredentialsCount, setAcademicCredentialsCount] = useState(0);
 
   const createProfileIfNotExists = async () => {
     if (!user?.id) return null;
@@ -85,16 +86,26 @@ export function useProfileManager() {
       setProfileData(profile);
       
       // Fetch experiences count
-      const { count, error: countError } = await supabase
+      const { count: expCount, error: countError } = await supabase
         .from('professional_experiences')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', user.id);
       
       if (countError) throw countError;
       
-      setExperiencesCount(count || 0);
+      setExperiencesCount(expCount || 0);
       
-      calculateCompletionPercentage(profile, count || 0);
+      // Fetch academic credentials count
+      const { count: acadCount, error: acadError } = await supabase
+        .from('academic_credentials')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id);
+        
+      if (acadError) throw acadError;
+      
+      setAcademicCredentialsCount(acadCount || 0);
+      
+      calculateCompletionPercentage(profile, expCount || 0, acadCount ||1);
     } catch (error: any) {
       console.error('Error fetching profile:', error.message);
       toast({
@@ -107,7 +118,7 @@ export function useProfileManager() {
     }
   };
 
-  const calculateCompletionPercentage = (data: any, experiencesCount: number) => {
+  const calculateCompletionPercentage = (data: any, experiencesCount: number, academicCredentialsCount: number) => {
     if (!data) return 0;
     
     let completed = 0;
@@ -138,6 +149,13 @@ export function useProfileManager() {
     }
     total += 3; // On considère que l'idéal est d'avoir au moins 3 expériences
     
+    // Informations académiques
+    if (academicCredentialsCount > 0) {
+      // Ajouter des points pour chaque diplôme/formation, avec un maximum de
+      completed += Math.min(academicCredentialsCount, 2);
+    }
+    total += 2; // On considère que l'idéal est d'avoir au moins 2 diplômes/formations
+    
     const percentage = Math.round((completed / total) * 100);
     setCompletionPercentage(percentage);
     
@@ -164,7 +182,7 @@ export function useProfileManager() {
     fetchProfileData();
     
     // Passer à l'étape suivante si ce n'est pas la dernière
-    if (activeStep < 2) {
+    if (activeStep < 3) {
       setActiveStep(activeStep + 1);
     } else {
       toast({

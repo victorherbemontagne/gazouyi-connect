@@ -2,6 +2,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfoForm from '@/components/PersonalInfoForm';
 import ProfessionalInfoForm from '@/components/ProfessionalInfoForm';
+import AcademicInfoForm from '@/components/AcademicInfoForm';
 import ProfileCompletion from '@/components/ProfileCompletion';
 
 interface ProfileContentProps {
@@ -34,6 +35,7 @@ export default function ProfileContent({
   const steps = [
     { id: 1, name: 'Informations personnelles', completed: completionPercentage >= 30 },
     { id: 2, name: 'Informations professionnelles', completed: completionPercentage >= 60 },
+    { id: 3, name: 'Informations académiques', completed: completionPercentage >= 90 },
   ];
 
   return (
@@ -42,7 +44,7 @@ export default function ProfileContent({
       
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <Tabs defaultValue={`step-${activeStep}`} onValueChange={(value) => setActiveStep(parseInt(value.split('-')[1]))}>
-          <TabsList className="grid w-full grid-cols-2 mb-8">
+          <TabsList className="grid w-full grid-cols-3 mb-8">
             <TabsTrigger 
               value="step-1" 
               disabled={!steps[0].completed && activeStep !== 1}
@@ -57,6 +59,13 @@ export default function ProfileContent({
             >
               Étape 2: Informations professionnelles
             </TabsTrigger>
+            <TabsTrigger 
+              value="step-3" 
+              disabled={!steps[2].completed && activeStep !== 3 && !steps[1].completed}
+              className={steps[2].completed ? "text-green-500" : ""}
+            >
+              Étape 3: Informations académiques
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="step-1" className="mt-0">
@@ -69,6 +78,14 @@ export default function ProfileContent({
           
           <TabsContent value="step-2" className="mt-0">
             <ProfessionalInfoForm 
+              initialData={profileData}
+              onComplete={handleStepComplete}
+              calculateCompletion={fetchProfileData}
+            />
+          </TabsContent>
+          
+          <TabsContent value="step-3" className="mt-0">
+            <AcademicInfoForm 
               initialData={profileData}
               onComplete={handleStepComplete}
               calculateCompletion={fetchProfileData}
