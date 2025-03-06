@@ -31,7 +31,7 @@ const Hero = ({ className }: HeroProps) => {
         </p>
         
         <div className="hero-cta">
-          <Button href="#features" icon className="text-lg px-8 py-4">
+          <Button href="/create-profile" icon className="text-lg px-8 py-4">
             Démarrer
           </Button>
         </div>

@@ -9,9 +9,10 @@ interface ButtonProps {
   className?: string;
   icon?: boolean;
   href?: string;
+  type?: "button" | "submit" | "reset";
 }
 
-const Button = ({ children, onClick, className, icon = false, href }: ButtonProps) => {
+const Button = ({ children, onClick, className, icon = false, href, type = "button" }: ButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseEnter = () => setIsHovered(true);
@@ -55,6 +56,7 @@ const Button = ({ children, onClick, className, icon = false, href }: ButtonProp
 
   return (
     <button
+      type={type}
       onClick={onClick}
       className={cn(
         "relative overflow-hidden inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-gazouyi rounded-full transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gazouyi-200 focus:ring-offset-2",
