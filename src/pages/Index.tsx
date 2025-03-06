@@ -1,11 +1,15 @@
 
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import Button from "@/components/Button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { session } = useAuth();
+  
   useEffect(() => {
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -37,12 +41,18 @@ const Index = () => {
             <a href="#" className="text-gazouyi-700 hover:text-gazouyi-900 transition-colors">
               VAE
             </a>
-            <Button href="#" icon>
-              Démarrer
+            <Button 
+              href={session ? "/dashboard" : "/auth"}
+              icon
+            >
+              {session ? "Mon espace" : "Démarrer"}
             </Button>
           </nav>
-          <Button href="#" className="md:hidden">
-            Démarrer
+          <Button 
+            href={session ? "/dashboard" : "/auth"}
+            className="md:hidden"
+          >
+            {session ? "Mon espace" : "Démarrer"}
           </Button>
         </div>
       </header>
@@ -97,8 +107,12 @@ const Index = () => {
               Rejoignez la communauté Gazouyi Connect et créez votre page professionnelle 
               en quelques minutes. C'est simple, rapide et valorisant !
             </p>
-            <Button href="#" icon className="text-lg px-8 py-4">
-              Démarrer maintenant
+            <Button 
+              href={session ? "/dashboard" : "/auth"}
+              icon 
+              className="text-lg px-8 py-4"
+            >
+              {session ? "Accéder à mon espace" : "Démarrer maintenant"}
             </Button>
           </div>
         </div>
