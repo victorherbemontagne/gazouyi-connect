@@ -28,39 +28,50 @@ export default function Dashboard() {
     if (!user?.id) return null;
     
     try {
+      console.log('Checking if profile exists for user:', user.id);
       // Check if profile exists
       const { data, error } = await supabase
         .from('candidate_profiles')
         .select('*')
         .eq('id', user.id);
-        
-      if (error) throw error;
+      
+      if (error) {
+        console.error('Error checking profile:', error);
+        throw error;
+      }
       
       // If no profile exists, create one
       if (!data || data.length === 0) {
-        console.log('Creating new profile for user', user.id);
-        const { data: newProfile, error: insertError } = await supabase
+        console.log('No profile found, creating new profile for user', user.id);
+        const newProfile = {
+          id: user.id,
+          profile_completion_percentage: 0,
+          first_name: user.user_metadata?.first_name || '',
+          last_name: user.user_metadata?.last_name || ''
+        };
+        
+        console.log('Inserting new profile:', newProfile);
+        const { data: createdProfile, error: insertError } = await supabase
           .from('candidate_profiles')
-          .insert([
-            { 
-              id: user.id,
-              profile_completion_percentage: 0,
-              first_name: user.user_metadata?.first_name || '',
-              last_name: user.user_metadata?.last_name || ''
-            }
-          ])
+          .insert([newProfile])
           .select();
           
-        if (insertError) throw insertError;
-        return newProfile?.[0] || null;
+        if (insertError) {
+          console.error('Error creating profile:', insertError);
+          throw insertError;
+        }
+        
+        console.log('New profile created:', createdProfile);
+        return createdProfile?.[0] || null;
       }
       
+      console.log('Existing profile found:', data[0]);
       return data[0];
     } catch (error: any) {
-      console.error('Error creating profile:', error.message);
+      console.error('Error in createProfileIfNotExists:', error.message);
       toast({
         title: "Erreur",
-        description: "Impossible de créer votre profil.",
+        description: "Impossible de créer votre profil: " + error.message,
         variant: "destructive",
       });
       return null;
@@ -72,11 +83,13 @@ export default function Dashboard() {
 
     try {
       setLoading(true);
+      console.log('Fetching profile for user:', user.id);
       
       // Get or create profile
       const profile = await createProfileIfNotExists();
       
       if (!profile) {
+        console.error('Failed to get or create profile');
         throw new Error("Impossible de récupérer ou créer le profil");
       }
       
@@ -86,7 +99,7 @@ export default function Dashboard() {
       console.error('Error fetching profile:', error.message);
       toast({
         title: "Erreur",
-        description: "Impossible de charger votre profil.",
+        description: "Impossible de charger votre profil: " + error.message,
         variant: "destructive",
       });
     } finally {
@@ -156,7 +169,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (user) {
+      console.log('User authenticated, fetching profile data');
       fetchProfileData();
+    } else {
+      console.log('No user logged in');
     }
   }, [user]);
 
