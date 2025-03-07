@@ -1,13 +1,15 @@
 
 import { Progress } from "@/components/ui/progress";
 import { useEffect, useState } from "react";
-import { CircleCheck, Circle, Sparkles } from "lucide-react";
+import { CircleCheck, Circle, Sparkles, Edit2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ProfileCompletionProps {
   percentage: number;
+  onEditClick?: () => void;
 }
 
-const ProfileCompletion = ({ percentage }: ProfileCompletionProps) => {
+const ProfileCompletion = ({ percentage, onEditClick }: ProfileCompletionProps) => {
   const [progress, setProgress] = useState(0);
   const [animate, setAnimate] = useState(false);
 
@@ -98,6 +100,20 @@ const ProfileCompletion = ({ percentage }: ProfileCompletionProps) => {
         {progress >= 90 && progress < 100 && "Plus que quelques détails à compléter pour finaliser votre profil !"}
         {progress === 100 && "Félicitations ! Votre profil est complet. Vous pourrez maintenant accéder à toutes les fonctionnalités 🎉"}
       </div>
+      
+      {percentage === 100 && onEditClick && (
+        <div className="text-center mt-6">
+          <Button 
+            onClick={onEditClick}
+            className="bg-green-600 hover:bg-green-700 transition-all"
+          >
+            <span className="flex items-center gap-2">
+              <Edit2 className="h-4 w-4" />
+              Modifier mes informations
+            </span>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

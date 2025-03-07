@@ -109,7 +109,10 @@ export default function ProfileContent({
 
   return (
     <>
-      <ProfileCompletion percentage={completionPercentage} />
+      <ProfileCompletion 
+        percentage={completionPercentage} 
+        onEditClick={completionPercentage === 100 ? () => setShowFormWhenComplete(true) : undefined}
+      />
       
       {/* Public Profile Toggle */}
       {completionPercentage === 100 && (
@@ -161,21 +164,6 @@ export default function ProfileContent({
             userId={profileData.id} 
             isPublic={isPublic}
           />
-        </div>
-      )}
-      
-      {/* Show edit button when profile is complete and form is hidden */}
-      {completionPercentage === 100 && !showFormWhenComplete && (
-        <div className="text-center mb-8">
-          <Button 
-            onClick={() => setShowFormWhenComplete(true)}
-            className="bg-green-600 hover:bg-green-700 transition-all"
-          >
-            <span className="flex items-center gap-2">
-              <Edit2 className="h-4 w-4" />
-              Modifier mes informations
-            </span>
-          </Button>
         </div>
       )}
       
