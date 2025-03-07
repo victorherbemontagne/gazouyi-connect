@@ -66,8 +66,9 @@ const ProfileCompletion = ({ percentage }: ProfileCompletionProps) => {
       <div className={`mt-4 text-sm text-gazouyi-600 ${animate ? 'animate-fade-in' : ''}`}>
         {progress < 30 && "Démarrez en ajoutant vos informations personnelles"}
         {progress >= 30 && progress < 60 && "Vous avancez bien ! Continuez avec vos informations professionnelles"}
-        {progress >= 60 && progress < 100 && "Presque terminé ! Ajoutez vos diplômes et formations"}
-        {progress === 100 && "Félicitations ! Votre profil est complet"}
+        {progress >= 60 && progress < 90 && "Presque terminé ! Ajoutez vos diplômes et formations"}
+        {progress >= 90 && progress < 100 && "Plus que quelques détails à compléter !"}
+        {progress === 100 && "Félicitations ! Votre profil est complet 🎉"}
       </div>
     </div>
   );

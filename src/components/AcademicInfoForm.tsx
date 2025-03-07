@@ -57,6 +57,11 @@ const AcademicInfoForm = ({ onComplete, calculateCompletion }: AcademicInfoFormP
     fetchAcademicCredentials();
     setIsAddingCredential(false);
     calculateCompletion();
+    
+    toast({
+      title: "Diplôme/formation ajouté",
+      description: "Votre diplôme ou formation a été ajouté avec succès.",
+    });
   };
 
   const handleCredentialDeleted = async (id: string) => {
@@ -86,7 +91,17 @@ const AcademicInfoForm = ({ onComplete, calculateCompletion }: AcademicInfoFormP
   };
 
   const handleSubmit = () => {
-    onComplete();
+    // Appeler calculateCompletion pour mettre à jour le pourcentage avant de terminer l'étape
+    calculateCompletion();
+    
+    // Attendre que le calcul soit terminé avant d'appeler onComplete
+    setTimeout(() => {
+      toast({
+        title: "Étape complétée !",
+        description: "Vos informations académiques ont été enregistrées avec succès.",
+      });
+      onComplete();
+    }, 300);
   };
 
   return (
@@ -138,7 +153,7 @@ const AcademicInfoForm = ({ onComplete, calculateCompletion }: AcademicInfoFormP
           )}
 
           <div className="flex justify-end space-x-2 pt-6 border-t">
-            <Button type="button" onClick={handleSubmit}>
+            <Button type="button" onClick={handleSubmit} className="bg-gazouyi-600 hover:bg-gazouyi-700">
               Terminer cette étape
             </Button>
           </div>
