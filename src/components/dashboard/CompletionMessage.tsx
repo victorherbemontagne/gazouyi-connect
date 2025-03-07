@@ -90,7 +90,7 @@ export default function CompletionMessage() {
       </h3>
       
       <p className={`text-green-700 mb-6 text-lg ${showCelebration ? 'animate-fade-in' : ''}`}>
-        Votre profil est complet ! Vous pouvez maintenant accéder à toutes les fonctionnalités de la plateforme.
+        Félicitations ! Votre profil est complet. Vous pouvez maintenant le partager, l'améliorer grâce à nos conseils et suivre votre rayonnement.
       </p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
