@@ -1,15 +1,21 @@
 
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   useEffect(() => {
+    // Skip authentication check for public profile pages
+    if (location.pathname.startsWith('/profile/')) {
+      return;
+    }
+
     if (!loading && !session) {
       toast({
         title: "Accès refusé",
@@ -18,7 +24,12 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
       });
       navigate('/auth');
     }
-  }, [session, loading, navigate, toast]);
+  }, [session, loading, navigate, toast, location]);
+
+  // For public profile pages, don't apply loading or authentication checks
+  if (location.pathname.startsWith('/profile/')) {
+    return <>{children}</>;
+  }
 
   if (loading) {
     return (
