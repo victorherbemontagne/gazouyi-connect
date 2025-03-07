@@ -1,10 +1,11 @@
+
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import Footer from "@/components/Footer";
 import Button from "@/components/Button";
 import { useAuth } from "@/contexts/AuthContext";
+import NextStepsCard from "@/components/dashboard/NextStepsCard";
 
 const Index = () => {
   const { session } = useAuth();
@@ -102,6 +103,16 @@ const Index = () => {
         </div>
 
         <Features />
+        
+        {/* Next Steps Section */}
+        <div className="bg-gazouyi-50 py-16 px-4">
+          <div className="max-w-4xl mx-auto section-transition">
+            <h2 className="text-2xl md:text-3xl font-bold text-gazouyi-900 mb-6 text-center">
+              Les prochaines étapes pour valoriser votre parcours
+            </h2>
+            <NextStepsCard />
+          </div>
+        </div>
 
         <div className="bg-gazouyi-50 py-20 px-4">
           <div className="max-w-4xl mx-auto text-center section-transition">
