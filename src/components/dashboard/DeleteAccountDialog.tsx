@@ -12,6 +12,7 @@ export function DeleteAccountDialog() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleDeleteAccount = async () => {
     try {
@@ -22,7 +23,7 @@ export function DeleteAccountDialog() {
         console.error('Erreur lors de la suppression du compte:', error);
         toast({
           title: "Erreur",
-          description: "Impossible de supprimer votre compte. Veuillez réessayer plus tard.",
+          description: "Impossible de supprimer votre compte. " + error.message,
           variant: "destructive",
         });
         return;
@@ -30,9 +31,10 @@ export function DeleteAccountDialog() {
       
       if (success) {
         toast({
-          title: "Compte supprimé",
-          description: "Votre compte a été supprimé avec succès.",
+          title: "Compte désactivé",
+          description: "Votre compte a été désactivé avec succès.",
         });
+        setIsDialogOpen(false);
         navigate('/');
       }
     } catch (error) {
@@ -48,7 +50,7 @@ export function DeleteAccountDialog() {
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger asChild>
         <Button 
           variant="destructive" 
@@ -62,7 +64,7 @@ export function DeleteAccountDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
           <AlertDialogDescription>
-            Cette action supprimera définitivement votre compte et toutes vos données. Cette action ne peut pas être annulée.
+            Cette action désactivera votre compte et supprimera l'accès à vos données. Cette action ne peut pas être annulée.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

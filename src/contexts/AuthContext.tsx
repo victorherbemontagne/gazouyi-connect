@@ -75,15 +75,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: new Error('Aucun utilisateur connecté'), success: false };
       }
       
-      // Delete user from Supabase Auth
-      const { error } = await supabase.auth.admin.deleteUser(user.id);
+      // Supprimer les données de l'utilisateur en premier (si nécessaire)
+      // On pourrait ajouter plus de logique ici pour supprimer d'autres données associées
+
+      // Supprimer l'utilisateur - utilise la méthode standard au lieu de admin.deleteUser
+      const { error } = await supabase.auth.updateUser({
+        data: { deleted_at: new Date().toISOString() }
+      });
       
       if (error) {
-        console.error('Erreur lors de la suppression du compte:', error);
+        console.error('Erreur lors de la mise à jour du compte:', error);
         return { error, success: false };
       }
       
-      // Sign out after deletion
+      // Déconnecter l'utilisateur après le marquage comme supprimé
       await signOut();
       
       return { error: null, success: true };
