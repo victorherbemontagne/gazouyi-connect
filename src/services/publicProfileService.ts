@@ -11,7 +11,7 @@ export const getPublicProfileBySlug = async (slug: string) => {
       .from('candidate_profiles')
       .select('*')
       .eq('unique_profile_slug', slug)
-      .single();
+      .maybeSingle(); // Use maybeSingle instead of single to avoid the error
     
     if (profileError) {
       console.error('Error fetching profile:', profileError);
