@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { LogOut, User } from 'lucide-react';
 
 export default function DashboardHeader() {
   const { signOut } = useAuth();
@@ -13,12 +14,28 @@ export default function DashboardHeader() {
   };
 
   return (
-    <header className="py-4 px-6 border-b border-gazouyi-100 bg-white">
+    <header className="py-4 px-6 border-b border-gazouyi-100 bg-white sticky top-0 z-10 shadow-sm">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
-        <div className="text-2xl font-bold text-gazouyi-900">Gazouyi Connect</div>
-        <nav className="flex space-x-8 items-center">
-          <Button onClick={handleSignOut} variant="outline">
-            Déconnexion
+        <div className="flex items-center">
+          <div className="text-2xl font-bold bg-gradient-to-r from-gazouyi-600 to-gazouyi-800 bg-clip-text text-transparent">
+            Gazouyi Connect
+          </div>
+        </div>
+        <nav className="flex space-x-4 items-center">
+          <Button 
+            variant="ghost" 
+            className="flex items-center gap-2 text-gazouyi-700 hover:text-gazouyi-900 hover:bg-gazouyi-50"
+          >
+            <User className="h-4 w-4" />
+            <span className="hidden md:inline">Mon compte</span>
+          </Button>
+          <Button 
+            onClick={handleSignOut} 
+            variant="outline"
+            className="flex items-center gap-2 border-gazouyi-200 text-gazouyi-700 hover:bg-gazouyi-50"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden md:inline">Déconnexion</span>
           </Button>
         </nav>
       </div>

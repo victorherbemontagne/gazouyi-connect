@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { CircleCheck, Sparkles } from 'lucide-react';
+import { CircleCheck, Sparkles, CheckCheck, Star, Medal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function CompletionMessage() {
@@ -22,17 +22,17 @@ export default function CompletionMessage() {
   };
   
   return (
-    <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center relative overflow-hidden">
+    <div className="bg-gradient-to-br from-green-50 to-gazouyi-50 border border-green-200 rounded-xl p-8 text-center relative overflow-hidden shadow-md my-6">
       {showCelebration && (
         <>
           <div className="absolute -top-4 left-1/4 animate-bounce delay-100">
             <Sparkles className="h-8 w-8 text-yellow-400" />
           </div>
-          <div className="absolute -top-4 right-1/4 animate-bounce delay-300">
-            <Sparkles className="h-8 w-8 text-green-400" />
+          <div className="absolute top-10 right-1/4 animate-bounce delay-300">
+            <Star className="h-8 w-8 text-gazouyi-400" />
           </div>
           <div className="absolute bottom-0 left-1/3 animate-bounce delay-500">
-            <Sparkles className="h-8 w-8 text-blue-400" />
+            <Medal className="h-8 w-8 text-blue-400" />
           </div>
           <div className="absolute bottom-0 right-1/3 animate-bounce delay-700">
             <Sparkles className="h-8 w-8 text-purple-400" />
@@ -40,31 +40,39 @@ export default function CompletionMessage() {
         </>
       )}
       
-      <div className={`flex justify-center mb-3 ${showCelebration ? 'animate-scale-in' : ''}`}>
-        <CircleCheck className="h-12 w-12 text-green-600" />
+      <div className={`flex justify-center mb-6 ${showCelebration ? 'animate-scale-in' : ''}`}>
+        <div className="bg-green-100 p-4 rounded-full">
+          <CheckCheck className="h-12 w-12 text-green-600" />
+        </div>
       </div>
       
-      <Badge className={`bg-green-100 text-green-800 hover:bg-green-200 mb-2 ${showCelebration ? 'animate-fade-in' : ''}`}>
+      <Badge className={`bg-green-100 text-green-800 hover:bg-green-200 mb-4 py-1.5 px-3 text-sm ${showCelebration ? 'animate-fade-in' : ''}`}>
         Profil complété à 100%
       </Badge>
       
-      <h3 className={`text-xl font-semibold text-green-800 mb-2 mt-2 ${showCelebration ? 'animate-fade-in' : ''}`}>
+      <h3 className={`text-2xl font-bold text-green-800 mb-3 mt-2 ${showCelebration ? 'animate-fade-in' : ''}`}>
         Félicitations !
       </h3>
       
-      <p className={`text-green-700 mb-2 ${showCelebration ? 'animate-fade-in' : ''}`}>
+      <p className={`text-green-700 mb-4 text-lg ${showCelebration ? 'animate-fade-in' : ''}`}>
         Votre profil est complet ! Vous pouvez maintenant accéder à toutes les fonctionnalités de la plateforme.
       </p>
       
-      <p className={`text-green-600 text-sm mb-4 ${showCelebration ? 'animate-fade-in' : ''}`}>
-        Nous vous recontacterons dès que des offres correspondant à votre profil seront disponibles.
-      </p>
+      <div className={`bg-white p-4 rounded-lg mb-6 max-w-lg mx-auto border border-green-200 ${showCelebration ? 'animate-fade-in' : ''}`}>
+        <p className="text-green-600 text-sm">
+          Nous vous recontacterons dès que des offres correspondant à votre profil seront disponibles.
+          En attendant, vous pouvez explorer les opportunités sur la plateforme.
+        </p>
+      </div>
       
       <Button 
-        className={`mt-2 bg-green-600 hover:bg-green-700 ${showCelebration ? 'animate-fade-in hover-scale' : ''}`}
+        className={`mt-2 bg-green-600 hover:bg-green-700 px-6 py-6 h-auto ${showCelebration ? 'animate-fade-in hover:scale-105 transition-all' : ''}`}
         onClick={handleViewProfile}
       >
-        Voir mon profil public
+        <span className="flex items-center gap-2">
+          <CircleCheck className="h-5 w-5" />
+          Voir mon profil public
+        </span>
       </Button>
     </div>
   );

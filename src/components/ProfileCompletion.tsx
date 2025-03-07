@@ -1,7 +1,7 @@
 
 import { Progress } from "@/components/ui/progress";
 import { useEffect, useState } from "react";
-import { CircleCheck, Circle } from "lucide-react";
+import { CircleCheck, Circle, Sparkles } from "lucide-react";
 
 interface ProfileCompletionProps {
   percentage: number;
@@ -35,40 +35,68 @@ const ProfileCompletion = ({ percentage }: ProfileCompletionProps) => {
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-lg font-medium text-gazouyi-800">Complétez votre profil</h3>
-        <span className={`text-gazouyi-600 font-medium ${animate ? 'animate-scale-in' : ''}`}>{progress}%</span>
+    <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-gazouyi-100 relative overflow-hidden">
+      {percentage === 100 && (
+        <div className="absolute top-0 right-0 -mt-2 -mr-2 animate-bounce">
+          <Sparkles className="h-8 w-8 text-yellow-500" />
+        </div>
+      )}
+      
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-lg font-semibold text-gazouyi-800 flex items-center gap-2">
+          <span className="bg-gazouyi-100 p-1.5 rounded-full inline-flex">
+            <CircleCheck className="h-4 w-4 text-gazouyi-700" />
+          </span>
+          Complétez votre profil
+        </h3>
+        <div className={`text-lg font-bold ${animate ? 'animate-pulse' : ''} ${
+          percentage === 100 
+            ? 'text-green-600' 
+            : percentage >= 60 
+              ? 'text-gazouyi-600' 
+              : 'text-gazouyi-500'
+        }`}>
+          {progress}%
+        </div>
       </div>
+      
       <Progress 
         value={progress} 
-        className={`h-2 bg-gazouyi-100 ${animate ? 'after:animate-pulse' : ''}`}
+        className={`h-3 bg-gazouyi-100 mb-6 rounded-full overflow-hidden ${animate ? 'after:animate-pulse' : ''}`}
       />
       
-      <div className="mt-6 space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {steps.map((step, index) => (
           <div 
             key={index} 
-            className={`flex items-center ${progress >= step.threshold ? 'animate-fade-in' : ''}`}
+            className={`flex items-center p-3 rounded-lg ${
+              progress >= step.threshold 
+                ? 'bg-green-50 border border-green-100' 
+                : 'bg-gazouyi-50 border border-gazouyi-100'
+            } transition-all duration-300 ${animate && progress >= step.threshold ? 'scale-105' : ''}`}
           >
             {progress >= step.threshold ? (
-              <CircleCheck className={`h-5 w-5 text-green-500 mr-2 ${animate && progress >= step.threshold ? 'animate-scale-in' : ''}`} />
+              <CircleCheck className={`h-5 w-5 text-green-500 mr-3 flex-shrink-0 ${animate && progress >= step.threshold ? 'animate-pulse' : ''}`} />
             ) : (
-              <Circle className="h-5 w-5 text-gazouyi-300 mr-2" />
+              <Circle className="h-5 w-5 text-gazouyi-400 mr-3 flex-shrink-0" />
             )}
-            <span className={`text-sm ${progress >= step.threshold ? 'text-green-600 font-medium' : 'text-gazouyi-600'}`}>
+            <span className={`text-sm font-medium ${progress >= step.threshold ? 'text-green-700' : 'text-gazouyi-700'}`}>
               {step.label}
             </span>
           </div>
         ))}
       </div>
       
-      <div className={`mt-4 text-sm text-gazouyi-600 ${animate ? 'animate-fade-in' : ''}`}>
-        {progress < 30 && "Démarrez en ajoutant vos informations personnelles"}
-        {progress >= 30 && progress < 60 && "Vous avancez bien ! Continuez avec vos informations professionnelles"}
-        {progress >= 60 && progress < 90 && "Presque terminé ! Ajoutez vos diplômes et formations"}
-        {progress >= 90 && progress < 100 && "Plus que quelques détails à compléter !"}
-        {progress === 100 && "Félicitations ! Votre profil est complet 🎉"}
+      <div className={`mt-4 text-sm p-3 rounded-lg ${
+        progress === 100 
+          ? 'bg-green-50 text-green-700 border border-green-100' 
+          : 'bg-gazouyi-50 text-gazouyi-700 border border-gazouyi-100'
+      } ${animate ? 'animate-fade-in' : ''}`}>
+        {progress < 30 && "Démarrez en ajoutant vos informations personnelles pour débloquer les autres sections."}
+        {progress >= 30 && progress < 60 && "Vous avancez bien ! Continuez avec vos informations professionnelles pour améliorer votre profil."}
+        {progress >= 60 && progress < 90 && "Presque terminé ! Ajoutez vos diplômes et formations pour finaliser votre profil."}
+        {progress >= 90 && progress < 100 && "Plus que quelques détails à compléter pour finaliser votre profil !"}
+        {progress === 100 && "Félicitations ! Votre profil est complet. Vous pourrez maintenant accéder à toutes les fonctionnalités 🎉"}
       </div>
     </div>
   );
