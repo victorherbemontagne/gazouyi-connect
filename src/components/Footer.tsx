@@ -11,8 +11,14 @@ const Footer = ({ className }: FooterProps) => {
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
-            <div className="text-xl font-semibold text-gazouyi-900">Gazouyi Connect</div>
-            <p className="text-sm text-gazouyi-600">
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/d66888ab-cdcf-4c38-a6e4-85c1c632c6ae.png" 
+                alt="Gazouyi Connect Logo" 
+                className="h-12 md:h-14"
+              />
+            </div>
+            <p className="text-sm text-gazouyi-600 mt-2">
               Valorisez votre parcours dans la petite enfance
             </p>
           </div>

@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Hero from "@/components/Hero";
@@ -33,7 +32,13 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <header className="py-4 px-6 border-b border-gazouyi-100 sticky top-0 bg-white/80 backdrop-blur-sm z-50">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-gazouyi-900">Gazouyi Connect</div>
+          <div>
+            <img 
+              src="/lovable-uploads/d66888ab-cdcf-4c38-a6e4-85c1c632c6ae.png" 
+              alt="Gazouyi Connect Logo" 
+              className="h-10 md:h-12"
+            />
+          </div>
           <nav className="hidden md:flex space-x-8 items-center">
             <a href="#features" className="text-gazouyi-700 hover:text-gazouyi-900 transition-colors">
               Fonctionnalités
