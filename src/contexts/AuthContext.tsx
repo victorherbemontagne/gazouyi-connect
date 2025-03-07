@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -75,20 +74,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { error: new Error('Aucun utilisateur connecté'), success: false };
       }
       
-      // Supprimer les données de l'utilisateur en premier (si nécessaire)
-      // On pourrait ajouter plus de logique ici pour supprimer d'autres données associées
-
-      // Supprimer l'utilisateur - utilise la méthode standard au lieu de admin.deleteUser
-      const { error } = await supabase.auth.updateUser({
-        data: { deleted_at: new Date().toISOString() }
-      });
+      // Étape 1: Appeler notre fonction personnalisée pour supprimer toutes les données
+      const { data, error: fnError } = await supabase
+        .rpc('delete_user_account', { user_id: user.id });
       
-      if (error) {
-        console.error('Erreur lors de la mise à jour du compte:', error);
-        return { error, success: false };
+      if (fnError) {
+        console.error('Erreur lors de la suppression des données:', fnError);
+        return { error: fnError, success: false };
       }
       
-      // Déconnecter l'utilisateur après le marquage comme supprimé
+      // Étape 2: Déconnecter l'utilisateur
       await signOut();
       
       return { error: null, success: true };

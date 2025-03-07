@@ -31,8 +31,8 @@ export function DeleteAccountDialog() {
       
       if (success) {
         toast({
-          title: "Compte désactivé",
-          description: "Votre compte a été désactivé avec succès.",
+          title: "Compte supprimé",
+          description: "Votre compte et toutes vos données ont été supprimés avec succès.",
         });
         setIsDialogOpen(false);
         navigate('/');
@@ -64,7 +64,7 @@ export function DeleteAccountDialog() {
         <AlertDialogHeader>
           <AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
           <AlertDialogDescription>
-            Cette action désactivera votre compte et supprimera l'accès à vos données. Cette action ne peut pas être annulée.
+            Cette action supprimera définitivement votre compte et toutes vos données. Cette action ne peut pas être annulée.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
