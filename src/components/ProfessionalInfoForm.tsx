@@ -107,8 +107,13 @@ const ProfessionalInfoForm = ({ initialData, onComplete, calculateCompletion }: 
         description: "Vos informations professionnelles ont été mises à jour avec succès.",
       });
       
+      // Recalculer le pourcentage de complétion après la mise à jour
       calculateCompletion();
-      onComplete();
+      
+      // Attendre un court instant pour que le calcul soit terminé avant de continuer
+      setTimeout(() => {
+        onComplete();
+      }, 300);
     } catch (error: any) {
       toast({
         title: "Erreur",
@@ -170,6 +175,8 @@ const ProfessionalInfoForm = ({ initialData, onComplete, calculateCompletion }: 
   const handleExperienceComplete = () => {
     fetchExperiences();
     setShowExperienceForm(false);
+    
+    // S'assurer que le pourcentage de complétion est mis à jour après l'ajout/modification d'une expérience
     calculateCompletion();
   };
 

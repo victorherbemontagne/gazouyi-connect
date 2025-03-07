@@ -21,7 +21,8 @@ export function Toaster() {
           (title && title.toLowerCase().includes("succès")) || 
           (title && title.toLowerCase().includes("félicitations")) ||
           (title && title.toLowerCase().includes("enregistré")) ||
-          (title && title.toLowerCase().includes("complété"));
+          (title && title.toLowerCase().includes("complété")) ||
+          (title && title.toLowerCase().includes("étape complété"));
         
         return (
           <Toast key={id} {...props} className={isCelebration ? "celebration-toast overflow-hidden" : ""}>

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -105,7 +104,9 @@ export function useProfileManager() {
       
       setAcademicCredentialsCount(acadCount || 0);
       
-      calculateCompletionPercentage(profile, expCount || 0, acadCount || 0);
+      // Calculate and update the completion percentage
+      const percentage = calculateCompletionPercentage(profile, expCount || 0, acadCount || 0);
+      setCompletionPercentage(percentage);
     } catch (error: any) {
       console.error('Error fetching profile:', error.message);
       toast({
@@ -159,7 +160,6 @@ export function useProfileManager() {
     total += maxCredentials;
     
     const percentage = Math.round((completed / total) * 100);
-    setCompletionPercentage(percentage);
     
     // Mettre à jour le pourcentage dans la base de données
     updateCompletionPercentage(percentage);
@@ -180,16 +180,37 @@ export function useProfileManager() {
     }
   };
 
-  const handleStepComplete = () => {
-    fetchProfileData();
+  const handleStepComplete = async () => {
+    // Récupérer les données à jour avant de procéder
+    await fetchProfileData();
+    
+    // Afficher un toast de célébration pour l'étape complétée
+    let stepName = "";
+    switch (activeStep) {
+      case 1:
+        stepName = "personnelles";
+        break;
+      case 2:
+        stepName = "professionnelles";
+        break;
+      case 3:
+        stepName = "académiques";
+        break;
+    }
+    
+    toast({
+      title: "Étape complétée !",
+      description: `Vos informations ${stepName} ont été enregistrées avec succès.`,
+      variant: "default",
+    });
     
     // Passer à l'étape suivante si ce n'est pas la dernière
     if (activeStep < 3) {
       setActiveStep(activeStep + 1);
-    } else {
+    } else if (completionPercentage === 100) {
       toast({
-        title: "Profil complété !",
-        description: "Toutes les étapes ont été complétées avec succès.",
+        title: "Félicitations !",
+        description: "Votre profil est maintenant complet !",
       });
     }
   };
