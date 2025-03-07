@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +26,15 @@ interface AcademicCredentialFormProps {
   onSave: () => void;
 }
 
+const diplomeOptions = [
+  "CAP AEPE",
+  "AP - Auxiliaire de Puériculture",
+  "Aide Soignant",
+  "EJE - Éducateur de Jeunes Enfants",
+  "Bac Pro ASSP",
+  "Autre"
+];
+
 const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCredentialFormProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -50,6 +58,10 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
 
   const handleTypeChange = (value: string) => {
     setFormData({ ...formData, credential_type: value });
+  };
+
+  const handleTitleChange = (value: string) => {
+    setFormData({ ...formData, title: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -133,14 +145,21 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
       
       <div className="space-y-2">
         <Label htmlFor="title">Titre du diplôme / formation</Label>
-        <Input
-          id="title"
-          name="title"
+        <Select
           value={formData.title}
-          onChange={handleChange}
-          required
-          placeholder="Ex: CAP Petite Enfance, Formation aux premiers secours..."
-        />
+          onValueChange={handleTitleChange}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Sélectionnez un diplôme" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            {diplomeOptions.map((option) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       
       <div className="space-y-2">
