@@ -24,6 +24,7 @@ export default function DashboardHeader() {
         <nav className="flex space-x-4 items-center">
           <Button 
             variant="ghost" 
+            onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
             className="flex items-center gap-2 text-gazouyi-700 hover:text-gazouyi-900 hover:bg-gazouyi-50"
           >
             <User className="h-4 w-4" />

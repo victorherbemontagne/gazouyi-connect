@@ -15,6 +15,10 @@ type AuthContextType = {
     data: any;
   }>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<{
+    error: Error | null;
+    success: boolean;
+  }>;
   user: any;
 };
 
@@ -65,12 +69,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
   };
 
+  const deleteAccount = async () => {
+    try {
+      if (!user) {
+        return { error: new Error('Aucun utilisateur connecté'), success: false };
+      }
+      
+      // Delete user from Supabase Auth
+      const { error } = await supabase.auth.admin.deleteUser(user.id);
+      
+      if (error) {
+        console.error('Erreur lors de la suppression du compte:', error);
+        return { error, success: false };
+      }
+      
+      // Sign out after deletion
+      await signOut();
+      
+      return { error: null, success: true };
+    } catch (error: any) {
+      console.error('Erreur lors de la suppression du compte:', error);
+      return { error, success: false };
+    }
+  };
+
   const value = {
     session,
     loading,
     signUp,
     signIn,
     signOut,
+    deleteAccount,
     user,
   };
 
