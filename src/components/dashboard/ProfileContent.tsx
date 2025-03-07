@@ -43,10 +43,13 @@ export default function ProfileContent({
 
   return (
     <>
-      <ProfileCompletion 
-        percentage={completionPercentage} 
-        onEditClick={completionPercentage === 100 ? () => setShowFormWhenComplete(true) : undefined}
-      />
+      {/* Only show ProfileCompletion when profile is not complete or when in edit mode */}
+      {(completionPercentage < 100 || showFormWhenComplete) && (
+        <ProfileCompletion 
+          percentage={completionPercentage} 
+          onEditClick={completionPercentage === 100 ? () => setShowFormWhenComplete(true) : undefined}
+        />
+      )}
       
       {/* Public Profile Toggle */}
       {completionPercentage === 100 && (
