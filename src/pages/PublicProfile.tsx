@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPublicProfileBySlug } from '@/services/publicProfileService';
 import { Card, CardContent } from "@/components/ui/card";
-import { Briefcase, GraduationCap, MapPin, Calendar, Mail, Phone, User, Share2 } from 'lucide-react';
+import { Briefcase, GraduationCap, MapPin, Calendar, Mail, Phone, User, Share2, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
@@ -90,6 +90,10 @@ export default function PublicProfile() {
     }
   };
 
+  const handlePrintProfile = () => {
+    window.print();
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gazouyi-50 to-white flex items-center justify-center">
@@ -115,25 +119,31 @@ export default function PublicProfile() {
   const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gazouyi-50 to-white py-10 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-gazouyi-50 to-white py-10 px-4 print:bg-white print:py-0">
       <div className="max-w-4xl mx-auto">
-        {/* Header with share button */}
-        <div className="flex justify-between items-center mb-6">
+        {/* Header with share and print buttons */}
+        <div className="flex justify-between items-center mb-6 print:hidden">
           <h1 className="text-xl font-medium text-gazouyi-600">CV Digital</h1>
-          <Button variant="outline" size="sm" onClick={handleShareProfile} className="flex items-center gap-2">
-            <Share2 className="h-4 w-4" />
-            Partager ce profil
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handlePrintProfile} className="flex items-center gap-2">
+              <Printer className="h-4 w-4" />
+              Imprimer ce CV
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleShareProfile} className="flex items-center gap-2">
+              <Share2 className="h-4 w-4" />
+              Partager ce profil
+            </Button>
+          </div>
         </div>
         
         {/* Main profile card */}
-        <Card className="mb-8 overflow-hidden border-none shadow-lg">
+        <Card className="mb-8 overflow-hidden border-none shadow-lg print:shadow-none print:border">
           {/* Header banner */}
-          <div className="h-32 bg-gradient-to-r from-custom-primary to-custom-primary/80"></div>
+          <div className="h-32 bg-gradient-to-r from-custom-primary to-custom-primary/80 print:h-24"></div>
           
           <div className="relative px-6 pb-6">
             {/* Profile photo */}
-            <div className="absolute -top-16 left-6 h-32 w-32 rounded-full border-4 border-white overflow-hidden bg-white shadow-md">
+            <div className="absolute -top-16 left-6 h-32 w-32 rounded-full border-4 border-white overflow-hidden bg-white shadow-md print:h-24 print:w-24 print:-top-12">
               {profile.profile_photo_url ? (
                 <img 
                   src={profile.profile_photo_url} 
@@ -142,13 +152,13 @@ export default function PublicProfile() {
                 />
               ) : (
                 <div className="h-full w-full flex items-center justify-center bg-gazouyi-100">
-                  <User className="h-16 w-16 text-gazouyi-400" />
+                  <User className="h-16 w-16 text-gazouyi-400 print:h-12 print:w-12" />
                 </div>
               )}
             </div>
             
             {/* Profile info */}
-            <div className="pt-20">
+            <div className="pt-20 print:pt-16">
               <h1 className="text-3xl font-bold text-gazouyi-900">{fullName}</h1>
               
               {profile.current_job_title && (
@@ -253,9 +263,9 @@ export default function PublicProfile() {
         </div>
         
         {/* Footer */}
-        <div className="mt-10 text-center text-gazouyi-500 text-sm">
+        <div className="mt-10 text-center text-gazouyi-500 text-sm print:mt-6">
           <p>Profil créé avec Gazouyi Connect</p>
-          <a href="/" className="text-gazouyi-600 hover:text-gazouyi-700 underline">Créez votre propre CV digital</a>
+          <a href="/" className="text-gazouyi-600 hover:text-gazouyi-700 underline print:no-underline">Créez votre propre CV digital</a>
         </div>
       </div>
     </div>

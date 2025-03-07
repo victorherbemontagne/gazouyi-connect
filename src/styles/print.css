@@ -1,0 +1,30 @@
+
+@media print {
+  /* Hide elements not needed for printing */
+  .print-hidden,
+  button,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Remove background colors and shadows */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Ensure the page breaks properly */
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* Reset dimensions/spacing for print */
+  .max-w-4xl {
+    max-width: none !important;
+  }
+
+  /* Ensure text is readable */
+  p, h1, h2, h3, h4, h5, h6 {
+    color: black !important;
+  }
+}
