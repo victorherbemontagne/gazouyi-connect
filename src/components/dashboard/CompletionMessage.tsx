@@ -1,13 +1,16 @@
-
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { CircleCheck, Sparkles, CheckCheck, Star, Medal, Edit2, Briefcase, GraduationCap } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function CompletionMessage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [showCelebration, setShowCelebration] = useState(false);
+  const [profileSlug, setProfileSlug] = useState<string | null>(null);
   
   useEffect(() => {
     // Déclencher l'animation après un court délai pour permettre le rendu initial
@@ -15,11 +18,43 @@ export default function CompletionMessage() {
     return () => clearTimeout(timer);
   }, []);
   
+  useEffect(() => {
+    // Fetch the user's profile slug
+    const fetchProfileSlug = async () => {
+      if (!user?.id) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('candidate_profiles')
+          .select('unique_profile_slug')
+          .eq('id', user.id)
+          .single();
+          
+        if (error) {
+          console.error('Error fetching profile slug:', error);
+          return;
+        }
+        
+        if (data?.unique_profile_slug) {
+          setProfileSlug(data.unique_profile_slug);
+        }
+      } catch (err) {
+        console.error('Failed to fetch profile slug:', err);
+      }
+    };
+    
+    fetchProfileSlug();
+  }, [user]);
+  
   const handleViewProfile = () => {
-    // Ici, on naviguerait vers le profil public de l'utilisateur
-    // Pour l'instant, redirigeons simplement vers la page d'accueil
-    navigate('/');
+    if (profileSlug) {
+      navigate(`/profile/${profileSlug}`);
+    } else {
+      // If we can't find the profile slug, just go to the dashboard
+      navigate('/dashboard');
+    }
   };
+  
   
   return (
     <div className="bg-gradient-to-br from-green-50 to-gazouyi-50 border border-green-200 rounded-xl p-8 text-center relative overflow-hidden shadow-md my-6">
@@ -59,7 +94,6 @@ export default function CompletionMessage() {
       </p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
-        {/* Card 1: Modifier le profil */}
         <div className={`bg-white p-5 rounded-lg border border-green-200 flex flex-col h-full ${showCelebration ? 'animate-fade-in' : ''}`}>
           <div className="flex items-center gap-2 mb-3 text-green-700">
             <Edit2 className="h-5 w-5" />
@@ -77,7 +111,6 @@ export default function CompletionMessage() {
           </Button>
         </div>
         
-        {/* Card 2: Ateliers Gazouyi */}
         <div className={`bg-white p-5 rounded-lg border border-green-200 flex flex-col h-full ${showCelebration ? 'animate-fade-in delay-100' : ''}`}>
           <div className="flex items-center gap-2 mb-3 text-green-700">
             <Briefcase className="h-5 w-5" />
@@ -95,7 +128,6 @@ export default function CompletionMessage() {
           </Button>
         </div>
         
-        {/* Card 3: VAE */}
         <div className={`bg-white p-5 rounded-lg border border-green-200 flex flex-col h-full ${showCelebration ? 'animate-fade-in delay-200' : ''}`}>
           <div className="flex items-center gap-2 mb-3 text-green-700">
             <GraduationCap className="h-5 w-5" />
@@ -117,6 +149,7 @@ export default function CompletionMessage() {
       <Button 
         className={`mt-2 bg-green-600 hover:bg-green-700 px-6 py-6 h-auto ${showCelebration ? 'animate-fade-in hover:scale-105 transition-all' : ''}`}
         onClick={handleViewProfile}
+        disabled={!profileSlug}
       >
         <span className="flex items-center gap-2">
           <CircleCheck className="h-5 w-5" />
@@ -126,4 +159,3 @@ export default function CompletionMessage() {
     </div>
   );
 }
-
