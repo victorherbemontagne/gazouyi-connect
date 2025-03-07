@@ -60,6 +60,8 @@ export type Database = {
           phone: string | null
           profile_completion_percentage: number | null
           profile_photo_url: string | null
+          public_profile_enabled: boolean | null
+          unique_profile_slug: string | null
           updated_at: string | null
         }
         Insert: {
@@ -76,6 +78,8 @@ export type Database = {
           phone?: string | null
           profile_completion_percentage?: number | null
           profile_photo_url?: string | null
+          public_profile_enabled?: boolean | null
+          unique_profile_slug?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -92,6 +96,8 @@ export type Database = {
           phone?: string | null
           profile_completion_percentage?: number | null
           profile_photo_url?: string | null
+          public_profile_enabled?: boolean | null
+          unique_profile_slug?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -217,6 +223,35 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      profile_views: {
+        Row: {
+          id: string
+          profile_id: string
+          viewed_at: string | null
+          viewer_ip: string | null
+        }
+        Insert: {
+          id?: string
+          profile_id: string
+          viewed_at?: string | null
+          viewer_ip?: string | null
+        }
+        Update: {
+          id?: string
+          profile_id?: string
+          viewed_at?: string | null
+          viewer_ip?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_views_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "candidate_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

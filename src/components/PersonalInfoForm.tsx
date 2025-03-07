@@ -1,12 +1,14 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, User, MapPin } from "lucide-react";
+import { Upload, User, MapPin, Link, Share2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface PersonalInfoFormProps {
   initialData: {
@@ -15,6 +17,8 @@ interface PersonalInfoFormProps {
     city?: string | null;
     department?: string | null;
     profile_photo_url?: string | null;
+    public_profile_enabled?: boolean | null;
+    unique_profile_slug?: string | null;
   };
   onComplete: () => void;
   calculateCompletion: () => void;
@@ -30,10 +34,38 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
     city: initialData.city || "",
     department: initialData.department || "",
     profile_photo_url: initialData.profile_photo_url || "",
+    public_profile_enabled: initialData.public_profile_enabled || false,
+    unique_profile_slug: initialData.unique_profile_slug || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSwitchChange = (checked: boolean) => {
+    setFormData({ ...formData, public_profile_enabled: checked });
+  };
+
+  const getPublicProfileUrl = () => {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/profile/${formData.unique_profile_slug}`;
+  };
+
+  const handleCopyProfileLink = async () => {
+    try {
+      await navigator.clipboard.writeText(getPublicProfileUrl());
+      toast({
+        title: "Lien copié !",
+        description: "Le lien vers votre profil public a été copié dans votre presse-papier.",
+      });
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      toast({
+        title: "Erreur",
+        description: "Impossible de copier le lien.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,6 +83,7 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
           city: formData.city,
           department: formData.department,
           profile_photo_url: formData.profile_photo_url,
+          public_profile_enabled: formData.public_profile_enabled,
         })
         .eq("id", user.id);
 
@@ -184,6 +217,43 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
                 Choisir une photo
               </Button>
             </div>
+          </div>
+          
+          {/* Public profile settings */}
+          <div className="mt-6 p-4 bg-gazouyi-50 rounded-lg">
+            <h3 className="text-lg font-medium text-gazouyi-800 mb-2">Profil public</h3>
+            <div className="flex items-center mb-4">
+              <Switch 
+                id="public_profile_enabled" 
+                checked={formData.public_profile_enabled}
+                onCheckedChange={handleSwitchChange}
+                className="mr-2"
+              />
+              <Label htmlFor="public_profile_enabled">
+                Activer mon profil public
+              </Label>
+            </div>
+            
+            {formData.public_profile_enabled && formData.unique_profile_slug && (
+              <div className="mt-2">
+                <p className="text-sm text-gazouyi-600 mb-2">
+                  Partagez votre profil professionnel avec ce lien :
+                </p>
+                <div className="flex items-center">
+                  <div className="flex-1 bg-white rounded-l-md border border-r-0 border-gazouyi-200 p-2 overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-gazouyi-500">
+                    {getPublicProfileUrl()}
+                  </div>
+                  <Button 
+                    type="button" 
+                    onClick={handleCopyProfileLink}
+                    className="rounded-l-none bg-gazouyi-600"
+                  >
+                    <Share2 className="h-4 w-4 mr-1" />
+                    Copier
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
           
           <div className="flex justify-end space-x-3 mt-6">
