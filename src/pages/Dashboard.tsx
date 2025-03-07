@@ -5,8 +5,9 @@ import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import ProfileContent from '@/components/dashboard/ProfileContent';
 import CompletionMessage from '@/components/dashboard/CompletionMessage';
 import { useProfileManager } from '@/components/dashboard/ProfileManager';
-import { CircleUserRound, Clock, Award, CheckCircle } from 'lucide-react';
+import { CircleUserRound, Award } from 'lucide-react';
 import Footer from '@/components/Footer';
+import ProfileViewsCard from '@/components/dashboard/ProfileViewsCard';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -28,22 +29,7 @@ export default function Dashboard() {
       console.log('No user logged in');
     }
   }, [user]);
-
-  // Determine which steps are completed based on completion percentage
-  const step1Completed = completionPercentage >= 30;
-  const step2Completed = completionPercentage >= 60;
-  const step3Completed = completionPercentage >= 90;
   
-  // Calculate how many steps are completed
-  const completedStepsCount = [step1Completed, step2Completed, step3Completed].filter(Boolean).length;
-  
-  // Get appropriate text for current step status
-  const getStepStatusText = () => {
-    if (completionPercentage === 100) return "Toutes les étapes complétées";
-    if (completedStepsCount === 0) return "Étape 1/3";
-    return `${completedStepsCount} étape${completedStepsCount > 1 ? 's' : ''} complétée${completedStepsCount > 1 ? 's' : ''}`;
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-gazouyi-50 to-white flex flex-col">
       <DashboardHeader />
@@ -59,40 +45,26 @@ export default function Dashboard() {
             </h1>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-xl shadow-sm border border-gazouyi-100 p-5 flex items-center hover:shadow-md transition">
-              <div className="bg-gazouyi-100 p-3 rounded-full mr-4">
-                <CircleUserRound className="h-6 w-6 text-gazouyi-700" />
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gazouyi-500">Profil</h3>
-                <p className="text-xl font-semibold">{completionPercentage}% complété</p>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-xl shadow-sm border border-gazouyi-100 p-5 flex items-center hover:shadow-md transition">
-              <div className={`p-3 rounded-full mr-4 ${completedStepsCount > 0 ? 'bg-green-100' : 'bg-gazouyi-100'}`}>
-                {completedStepsCount > 0 ? (
-                  <CheckCircle className="h-6 w-6 text-green-600" />
-                ) : (
-                  <Clock className="h-6 w-6 text-gazouyi-700" />
-                )}
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gazouyi-500">Étape actuelle</h3>
-                <p className="text-xl font-semibold">{getStepStatusText()}</p>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <ProfileViewsCard 
+              userId={profileData?.id || ''} 
+              isPublic={profileData?.public_profile_enabled || false}
+              profileSlug={profileData?.unique_profile_slug}
+            />
             
             <div className="bg-white rounded-xl shadow-sm border border-gazouyi-100 p-5 flex items-center hover:shadow-md transition">
               <div className="bg-gazouyi-100 p-3 rounded-full mr-4">
                 <Award className="h-6 w-6 text-gazouyi-700" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gazouyi-500">Statut</h3>
-                <p className="text-xl font-semibold">
-                  {completionPercentage === 100 ? "Profil complet" : "En cours"}
-                </p>
+                <h3 className="text-sm font-medium text-gazouyi-500">Objectif de vues</h3>
+                <p className="text-xl font-semibold">100 vues</p>
+                <div className="w-full bg-gazouyi-100 rounded-full h-2 mt-1">
+                  <div 
+                    className="bg-gradient-to-r from-gazouyi-500 to-custom-accent2 h-2 rounded-full" 
+                    style={{ width: `${Math.min(100, ((profileData?.viewCount || 0) / 100) * 100)}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
