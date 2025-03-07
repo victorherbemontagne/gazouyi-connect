@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import ProfileViewsCard from './ProfileViewsCard';
 
 interface ProfileContentProps {
   loading: boolean;
@@ -150,6 +151,16 @@ export default function ProfileContent({
               </div>
             </div>
           )}
+        </div>
+      )}
+      
+      {/* Profile Views Card */}
+      {completionPercentage === 100 && profileData && (
+        <div className="mb-6">
+          <ProfileViewsCard 
+            userId={profileData.id} 
+            isPublic={isPublic}
+          />
         </div>
       )}
       

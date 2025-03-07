@@ -67,15 +67,46 @@ export const getPublicProfileBySlug = async (slug: string) => {
       // We don't throw here as this is not critical
     }
     
+    // Get profile view count
+    const { count, error: countError } = await supabase
+      .from('profile_views')
+      .select('*', { count: 'exact', head: true })
+      .eq('profile_id', profile.id);
+      
+    if (countError) {
+      console.error('Error counting profile views:', countError);
+      // We don't throw here as this is not critical
+    }
+    
     console.log('Successfully returning profile data for:', profile.id);
     
     return {
       profile,
       experiences: experiences || [],
-      academicCredentials: academicCredentials || []
+      academicCredentials: academicCredentials || [],
+      viewCount: count || 0
     };
   } catch (error) {
     console.error('Error in getPublicProfileBySlug:', error);
+    throw error;
+  }
+};
+
+export const getProfileViewCount = async (userId: string) => {
+  try {
+    const { count, error } = await supabase
+      .from('profile_views')
+      .select('*', { count: 'exact', head: true })
+      .eq('profile_id', userId);
+      
+    if (error) {
+      console.error('Error counting profile views:', error);
+      throw error;
+    }
+    
+    return count || 0;
+  } catch (error) {
+    console.error('Error in getProfileViewCount:', error);
     throw error;
   }
 };
