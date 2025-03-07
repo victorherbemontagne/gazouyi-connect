@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { CircleCheck, Sparkles, CheckCheck, Star, Medal } from 'lucide-react';
+import { CircleCheck, Sparkles, CheckCheck, Star, Medal, Edit2, Briefcase, GraduationCap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function CompletionMessage() {
@@ -54,28 +54,64 @@ export default function CompletionMessage() {
         Félicitations !
       </h3>
       
-      <p className={`text-green-700 mb-4 text-lg ${showCelebration ? 'animate-fade-in' : ''}`}>
+      <p className={`text-green-700 mb-6 text-lg ${showCelebration ? 'animate-fade-in' : ''}`}>
         Votre profil est complet ! Vous pouvez maintenant accéder à toutes les fonctionnalités de la plateforme.
       </p>
       
-      <div className={`bg-white p-5 rounded-lg mb-6 max-w-lg mx-auto border border-green-200 ${showCelebration ? 'animate-fade-in' : ''}`}>
-        <h4 className="text-green-700 font-medium mb-2">Votre profil reste modifiable à tout moment</h4>
-        <p className="text-green-600 text-sm mb-4">
-          Nous vous recontacterons dès que des offres correspondant à votre profil seront disponibles.
-          En attendant, vous pouvez explorer les opportunités sur la plateforme.
-        </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+        {/* Card 1: Modifier le profil */}
+        <div className={`bg-white p-5 rounded-lg border border-green-200 flex flex-col h-full ${showCelebration ? 'animate-fade-in' : ''}`}>
+          <div className="flex items-center gap-2 mb-3 text-green-700">
+            <Edit2 className="h-5 w-5" />
+            <h4 className="font-medium">Votre profil reste modifiable</h4>
+          </div>
+          <p className="text-green-600 text-sm mb-4 flex-grow">
+            Vous pouvez à tout moment mettre à jour vos informations personnelles, professionnelles et académiques.
+          </p>
+          <Button 
+            variant="outline" 
+            className="mt-auto w-full border-green-600 text-green-600 hover:bg-green-50"
+            onClick={() => navigate('/dashboard')}
+          >
+            Modifier mon profil
+          </Button>
+        </div>
         
-        <h4 className="text-green-700 font-medium mt-4 mb-2">Continuez d'enrichir votre parcours</h4>
-        <ul className="text-left text-sm text-green-600 space-y-2 mx-auto max-w-md">
-          <li className="flex items-start">
-            <span className="mr-2 mt-0.5">•</span>
-            <span>Participer à un atelier Gazouyi Pro pour continuer de se former</span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 mt-0.5">•</span>
-            <span>Faire une VAE pour pouvoir ajouter un nouveau diplôme</span>
-          </li>
-        </ul>
+        {/* Card 2: Ateliers Gazouyi */}
+        <div className={`bg-white p-5 rounded-lg border border-green-200 flex flex-col h-full ${showCelebration ? 'animate-fade-in delay-100' : ''}`}>
+          <div className="flex items-center gap-2 mb-3 text-green-700">
+            <Briefcase className="h-5 w-5" />
+            <h4 className="font-medium">Enrichir votre profil professionnel</h4>
+          </div>
+          <p className="text-green-600 text-sm mb-4 flex-grow">
+            Participez à un atelier Gazouyi Pro pour continuer de vous former et ajouter de nouvelles compétences à votre profil.
+          </p>
+          <Button 
+            variant="outline" 
+            className="mt-auto w-full border-gazouyi-600 text-gazouyi-600 hover:bg-gazouyi-50"
+            onClick={() => navigate('/workshops')}
+          >
+            Découvrir les Ateliers Gazouyi
+          </Button>
+        </div>
+        
+        {/* Card 3: VAE */}
+        <div className={`bg-white p-5 rounded-lg border border-green-200 flex flex-col h-full ${showCelebration ? 'animate-fade-in delay-200' : ''}`}>
+          <div className="flex items-center gap-2 mb-3 text-green-700">
+            <GraduationCap className="h-5 w-5" />
+            <h4 className="font-medium">Faites une VAE pour ajouter un diplôme</h4>
+          </div>
+          <p className="text-green-600 text-sm mb-4 flex-grow">
+            Valorisez votre expérience professionnelle en obtenant un diplôme reconnu grâce à la Validation des Acquis de l'Expérience.
+          </p>
+          <Button 
+            variant="outline" 
+            className="mt-auto w-full border-blue-600 text-blue-600 hover:bg-blue-50"
+            onClick={() => navigate('/vae')}
+          >
+            Découvrir la VAE
+          </Button>
+        </div>
       </div>
       
       <Button 
@@ -90,3 +126,4 @@ export default function CompletionMessage() {
     </div>
   );
 }
+
