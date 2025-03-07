@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -117,7 +118,7 @@ export default function CompletionMessage() {
             <h4 className="font-medium">Enrichir votre profil professionnel</h4>
           </div>
           <p className="text-green-600 text-sm mb-4 flex-grow">
-            Participez à un atelier Gazouyi Pro pour continuer de vous former et ajouter de nouvelles compétences à votre profil.
+            Participez à un atelier Gazouyi Pro gratuit pour continuer de vous former et ajouter de nouvelles compétences à votre profil.
           </p>
           <Button 
             variant="outline" 
