@@ -1,6 +1,8 @@
 
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { CircleCheck } from 'lucide-react';
 
 export default function CompletionMessage() {
   const navigate = useNavigate();
@@ -13,7 +15,11 @@ export default function CompletionMessage() {
   
   return (
     <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-      <h3 className="text-xl font-semibold text-green-800 mb-2">Félicitations !</h3>
+      <div className="flex justify-center mb-3">
+        <CircleCheck className="h-12 w-12 text-green-600" />
+      </div>
+      <Badge className="bg-green-100 text-green-800 hover:bg-green-200 mb-2">Profil complété à 100%</Badge>
+      <h3 className="text-xl font-semibold text-green-800 mb-2 mt-2">Félicitations !</h3>
       <p className="text-green-700 mb-2">
         Votre profil est complet ! Vous pouvez maintenant accéder à toutes les fonctionnalités de la plateforme.
       </p>
