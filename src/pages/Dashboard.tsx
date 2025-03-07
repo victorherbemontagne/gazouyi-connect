@@ -6,6 +6,7 @@ import ProfileContent from '@/components/dashboard/ProfileContent';
 import CompletionMessage from '@/components/dashboard/CompletionMessage';
 import { useProfileManager } from '@/components/dashboard/ProfileManager';
 import { CircleUserRound, Clock, Award } from 'lucide-react';
+import Footer from '@/components/Footer';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -29,10 +30,10 @@ export default function Dashboard() {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gazouyi-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gazouyi-50 to-white flex flex-col">
       <DashboardHeader />
 
-      <main className="py-10 px-4 md:py-12">
+      <main className="py-10 px-4 md:py-12 flex-grow">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center mb-8 space-x-3">
             <div className="bg-gazouyi-100 p-2 rounded-full">
@@ -92,6 +93,8 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+      
+      <Footer className="mt-auto" />
     </div>
   );
 }
