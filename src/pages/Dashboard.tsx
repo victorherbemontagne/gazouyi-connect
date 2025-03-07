@@ -5,9 +5,9 @@ import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import ProfileContent from '@/components/dashboard/ProfileContent';
 import CompletionMessage from '@/components/dashboard/CompletionMessage';
 import { useProfileManager } from '@/components/dashboard/ProfileManager';
-import { CircleUserRound, Award } from 'lucide-react';
+import { CircleUserRound, Award, EyeIcon, CheckCircle, AlertCircle } from 'lucide-react';
 import Footer from '@/components/Footer';
-import ProfileViewsCard from '@/components/dashboard/ProfileViewsCard';
+import { getProfileViewCount } from '@/services/publicProfileService';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -45,23 +45,55 @@ export default function Dashboard() {
             </h1>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <ProfileViewsCard 
-              userId={profileData?.id || ''} 
-              isPublic={profileData?.public_profile_enabled || false}
-              profileSlug={profileData?.unique_profile_slug}
-            />
-            
-            <div className="bg-white rounded-xl shadow-sm border border-gazouyi-100 p-5 flex items-center hover:shadow-md transition">
-              <div className="bg-gazouyi-100 p-3 rounded-full mr-4">
-                <Award className="h-6 w-6 text-gazouyi-700" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            {/* Carte 1: Statut de complétion du profil */}
+            <div className="bg-white rounded-lg shadow-sm border border-gazouyi-100 p-4 flex items-center hover:shadow-md transition">
+              <div className={`p-2 rounded-full mr-3 ${completionPercentage === 100 ? 'bg-green-100' : 'bg-gazouyi-100'}`}>
+                {completionPercentage === 100 ? (
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                ) : (
+                  <AlertCircle className="h-5 w-5 text-gazouyi-600" />
+                )}
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gazouyi-500">Objectif de vues</h3>
-                <p className="text-xl font-semibold">100 vues</p>
-                <div className="w-full bg-gazouyi-100 rounded-full h-2 mt-1">
+                <h3 className="text-xs font-medium text-gazouyi-500">Statut du profil</h3>
+                <p className="text-sm font-semibold">
+                  {completionPercentage === 100 ? "Profil complet" : `${completionPercentage}% complété`}
+                </p>
+              </div>
+            </div>
+            
+            {/* Carte 2: Nombre de vues de la page */}
+            <div className="bg-white rounded-lg shadow-sm border border-gazouyi-100 p-4 flex items-center hover:shadow-md transition">
+              <div className="bg-blue-100 p-2 rounded-full mr-3">
+                <EyeIcon className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-xs font-medium text-gazouyi-500">Visites du profil</h3>
+                {profileData?.public_profile_enabled ? (
+                  <p className="text-sm font-semibold">{profileData?.viewCount || 0} visites</p>
+                ) : (
+                  <p className="text-sm font-semibold text-gazouyi-500">Page pas encore publiée</p>
+                )}
+              </div>
+            </div>
+            
+            {/* Carte 3: Objectif de vues */}
+            <div className="bg-white rounded-lg shadow-sm border border-gazouyi-100 p-4 flex items-center hover:shadow-md transition">
+              <div className="bg-gazouyi-100 p-2 rounded-full mr-3">
+                <Award className="h-5 w-5 text-gazouyi-700" />
+              </div>
+              <div className="w-full">
+                <h3 className="text-xs font-medium text-gazouyi-500">Objectif de vues</h3>
+                <div className="flex justify-between items-center">
+                  <p className="text-sm font-semibold">100 vues</p>
+                  <span className="text-xs text-gazouyi-500">
+                    {profileData?.viewCount || 0}/100
+                  </span>
+                </div>
+                <div className="w-full bg-gazouyi-100 rounded-full h-1.5 mt-1">
                   <div 
-                    className="bg-gradient-to-r from-gazouyi-500 to-custom-accent2 h-2 rounded-full" 
+                    className="bg-gradient-to-r from-gazouyi-500 to-custom-accent2 h-1.5 rounded-full" 
                     style={{ width: `${Math.min(100, ((profileData?.viewCount || 0) / 100) * 100)}%` }}
                   ></div>
                 </div>
