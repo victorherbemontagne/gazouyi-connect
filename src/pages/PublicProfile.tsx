@@ -35,6 +35,7 @@ interface Profile {
   current_job_title: string | null;
   current_job_duration: string | null;
   current_job_description: string | null;
+  public_profile_enabled: boolean | null;
 }
 
 export default function PublicProfile() {
@@ -50,14 +51,20 @@ export default function PublicProfile() {
     const fetchProfile = async () => {
       if (!slug) return;
       
+      console.log('Attempting to fetch profile with slug:', slug);
+      
       try {
         setLoading(true);
         const { profile, experiences, academicCredentials } = await getPublicProfileBySlug(slug);
         
         if (!profile) {
+          console.error('Profile not found or not public for slug:', slug);
           setError("Ce profil n'existe pas ou n'est pas public");
           return;
         }
+        
+        console.log('Successfully loaded profile:', profile.id);
+        console.log('Public profile enabled:', profile.public_profile_enabled);
         
         setProfile(profile);
         setExperiences(experiences);

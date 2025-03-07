@@ -11,14 +11,21 @@ export const getPublicProfileBySlug = async (slug: string) => {
       .from('candidate_profiles')
       .select('*')
       .eq('unique_profile_slug', slug)
-      .maybeSingle(); // Use maybeSingle instead of single to avoid the error
+      .maybeSingle(); // Use maybeSingle instead of single to avoid errors
     
     if (profileError) {
       console.error('Error fetching profile:', profileError);
       throw profileError;
     }
     
-    if (!profile || !profile.public_profile_enabled) {
+    if (!profile) {
+      console.log('No profile found with slug:', slug);
+      return { profile: null, experiences: [], academicCredentials: [] };
+    }
+    
+    // Check if the profile is public
+    if (!profile.public_profile_enabled) {
+      console.log('Profile exists but is not public, slug:', slug);
       return { profile: null, experiences: [], academicCredentials: [] };
     }
     
