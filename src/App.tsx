@@ -32,6 +32,7 @@ const App = () => (
                 </ProtectedRoute>
               } 
             />
+            {/* Public profile should be accessible without authentication */}
             <Route path="/profile/:slug" element={<PublicProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
