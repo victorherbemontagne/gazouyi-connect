@@ -124,6 +124,9 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
     }
   };
 
+  // Determine if we should show the diploma dropdown or free text input
+  const isDiploma = formData.credential_type === 'degree';
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-md border">
       <div className="space-y-2">
@@ -145,21 +148,36 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
       
       <div className="space-y-2">
         <Label htmlFor="title">Titre du diplôme / formation</Label>
-        <Select
-          value={formData.title}
-          onValueChange={handleTitleChange}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Sélectionnez un diplôme" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            {diplomeOptions.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {isDiploma ? (
+          <Select
+            value={formData.title}
+            onValueChange={handleTitleChange}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Sélectionnez un diplôme" />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              {diplomeOptions.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : (
+          <Input
+            id="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            placeholder={
+              formData.credential_type === 'training' 
+                ? "Ex: Formation aux premiers secours, BAFA..." 
+                : "Ex: HACCP, Certification Montessori..."
+            }
+          />
+        )}
       </div>
       
       <div className="space-y-2">
