@@ -58,11 +58,24 @@ export default function CompletionMessage() {
         Votre profil est complet ! Vous pouvez maintenant accéder à toutes les fonctionnalités de la plateforme.
       </p>
       
-      <div className={`bg-white p-4 rounded-lg mb-6 max-w-lg mx-auto border border-green-200 ${showCelebration ? 'animate-fade-in' : ''}`}>
-        <p className="text-green-600 text-sm">
+      <div className={`bg-white p-5 rounded-lg mb-6 max-w-lg mx-auto border border-green-200 ${showCelebration ? 'animate-fade-in' : ''}`}>
+        <h4 className="text-green-700 font-medium mb-2">Votre profil reste modifiable à tout moment</h4>
+        <p className="text-green-600 text-sm mb-4">
           Nous vous recontacterons dès que des offres correspondant à votre profil seront disponibles.
           En attendant, vous pouvez explorer les opportunités sur la plateforme.
         </p>
+        
+        <h4 className="text-green-700 font-medium mt-4 mb-2">Continuez d'enrichir votre parcours</h4>
+        <ul className="text-left text-sm text-green-600 space-y-2 mx-auto max-w-md">
+          <li className="flex items-start">
+            <span className="mr-2 mt-0.5">•</span>
+            <span>Participer à un atelier Gazouyi Pro pour continuer de se former</span>
+          </li>
+          <li className="flex items-start">
+            <span className="mr-2 mt-0.5">•</span>
+            <span>Faire une VAE pour pouvoir ajouter un nouveau diplôme</span>
+          </li>
+        </ul>
       </div>
       
       <Button 
