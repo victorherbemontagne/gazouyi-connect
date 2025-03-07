@@ -44,14 +44,27 @@ export default function Auth() {
     e.preventDefault();
     try {
       setLoading(true);
-      const { error } = await signUp(email, password);
+      const { error, data } = await signUp(email, password);
       
       if (error) throw error;
       
-      toast({
-        title: "Inscription réussie",
-        description: "Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.",
-      });
+      // After successful signup, automatically sign in
+      if (data) {
+        const { error: signInError } = await signIn(email, password);
+        
+        if (signInError) {
+          toast({
+            title: "Inscription réussie",
+            description: "Votre compte a été créé avec succès. Veuillez vous connecter.",
+          });
+        } else {
+          toast({
+            title: "Inscription et connexion réussies",
+            description: "Bienvenue sur Gazouyi ! Vous êtes connecté.",
+          });
+          navigate('/dashboard');
+        }
+      }
     } catch (error: any) {
       toast({
         title: "Erreur d'inscription",
