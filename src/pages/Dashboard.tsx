@@ -5,7 +5,6 @@ import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import ProfileContent from '@/components/dashboard/ProfileContent';
 import CompletionMessage from '@/components/dashboard/CompletionMessage';
 import { useProfileManager } from '@/components/dashboard/ProfileManager';
-import { DeleteAccountDialog } from '@/components/dashboard/DeleteAccountDialog';
 import { CircleUserRound, Clock, Award } from 'lucide-react';
 
 export default function Dashboard() {
@@ -90,13 +89,6 @@ export default function Dashboard() {
             />
             
             {completionPercentage === 100 && <CompletionMessage />}
-          </div>
-          
-          <div className="mt-16 border-t pt-8 flex flex-col items-center">
-            <h2 className="text-xl font-semibold text-gray-700 mb-6">Paramètres du compte</h2>
-            <div className="w-full max-w-md">
-              <DeleteAccountDialog />
-            </div>
           </div>
         </div>
       </main>
