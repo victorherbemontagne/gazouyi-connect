@@ -31,7 +31,7 @@ const Button = ({ children, onClick, className, icon = false, href, type = "butt
       )}
       <span 
         className={cn(
-          "absolute inset-0 bg-gazouyi-dark rounded-full transition-all duration-300 transform origin-left", 
+          "absolute inset-0 bg-custom-secondary rounded-full transition-all duration-300 transform origin-left", 
           isHovered ? "scale-x-100" : "scale-x-0"
         )} 
       />
@@ -43,7 +43,7 @@ const Button = ({ children, onClick, className, icon = false, href, type = "butt
       <a
         href={href}
         className={cn(
-          "relative overflow-hidden inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-gazouyi rounded-full transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gazouyi-200 focus:ring-offset-2",
+          "relative overflow-hidden inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-custom-primary rounded-full transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-custom-secondary focus:ring-offset-2",
           className
         )}
         onMouseEnter={handleMouseEnter}
@@ -59,7 +59,7 @@ const Button = ({ children, onClick, className, icon = false, href, type = "butt
       type={type}
       onClick={onClick}
       className={cn(
-        "relative overflow-hidden inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-gazouyi rounded-full transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gazouyi-200 focus:ring-offset-2",
+        "relative overflow-hidden inline-flex items-center justify-center px-6 py-3 text-base font-medium text-white bg-custom-primary rounded-full transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-custom-secondary focus:ring-offset-2",
         className
       )}
       onMouseEnter={handleMouseEnter}

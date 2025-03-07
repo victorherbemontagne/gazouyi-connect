@@ -51,13 +51,13 @@ const Features = ({ className }: FeaturesProps) => {
     <section id="features" ref={sectionRef} className={cn("py-20 px-4", className)}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16 section-transition">
-          <span className="inline-block px-4 py-1 text-sm font-medium text-gazouyi-700 bg-gazouyi-100 rounded-full mb-4">
+          <span className="inline-block px-4 py-1 text-sm font-medium text-custom-primary bg-blue-100 rounded-full mb-4">
             Fonctionnalités
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-gazouyi-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-custom-primary mb-4">
             Une plateforme conçue pour les professionnelles de la petite enfance
           </h2>
-          <p className="text-lg text-gazouyi-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Gazouyi Connect offre tous les outils nécessaires pour mettre en avant vos compétences 
             et faciliter votre démarche de VAE.
           </p>
@@ -67,14 +67,14 @@ const Features = ({ className }: FeaturesProps) => {
           {features.map((feature, index) => (
             <div 
               key={index}
-              className="feature-item opacity-0 p-6 rounded-xl bg-white border border-gazouyi-100 shadow-sm hover:shadow-md transition-shadow"
+              className="feature-item opacity-0 p-6 rounded-xl bg-white border border-blue-100 shadow-sm hover:shadow-md transition-shadow"
               style={{ animationDelay: `${feature.delay}ms` }}
             >
-              <div className="w-12 h-12 rounded-full bg-gazouyi-100 flex items-center justify-center mb-4">
-                <div className="w-6 h-6 rounded-full bg-gazouyi-500" />
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                <div className="w-6 h-6 rounded-full bg-custom-primary" />
               </div>
-              <h3 className="text-xl font-semibold text-gazouyi-900 mb-2">{feature.title}</h3>
-              <p className="text-gazouyi-600">{feature.description}</p>
+              <h3 className="text-xl font-semibold text-custom-primary mb-2">{feature.title}</h3>
+              <p className="text-gray-600">{feature.description}</p>
             </div>
           ))}
         </div>

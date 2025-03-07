@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Rubik', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -64,19 +66,26 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				gazouyi: {
-					DEFAULT: '#4A6FA5',
-					light: '#6A8BBF',
-					dark: '#2E4A73',
-					50: '#F0F4F9',
-					100: '#D9E2F0',
-					200: '#B3C5E1',
-					300: '#8DAAD2',
-					400: '#678FC3',
-					500: '#4A6FA5',
-					600: '#3B5984',
-					700: '#2E4A73',
-					800: '#203252',
-					900: '#121E31'
+					DEFAULT: '#0E56CA', // Main primary color
+					light: '#4D81D9', // Lighter shade
+					dark: '#0A428F', // Darker shade
+					50: '#E6F0FF',
+					100: '#B3D1FF',
+					200: '#80B3FF',
+					300: '#4D94FF',
+					400: '#1A75FF',
+					500: '#0E56CA', // Primary
+					600: '#0A428F',
+					700: '#082E66',
+					800: '#051A3D',
+					900: '#030D1F'
+				},
+				// New custom color palette
+				custom: {
+					primary: '#0E56CA',    // Principal blue
+					secondary: '#FFBD68',  // Principal orange/gold
+					accent1: '#FD8787',    // Secondary pink/red
+					accent2: '#FFD832',    // Secondary yellow
 				}
 			},
 			borderRadius: {
