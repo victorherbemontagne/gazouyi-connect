@@ -123,7 +123,7 @@ export default function CompletionMessage() {
           <Button 
             variant="outline" 
             className="mt-auto w-full border-gazouyi-600 text-gazouyi-600 hover:bg-gazouyi-50"
-            onClick={() => navigate('/workshops')}
+            onClick={() => window.open('https://www.pro.gazouyi.com/les-ateliers-gazouyi-pro', '_blank')}
           >
             Découvrir les Ateliers Gazouyi
           </Button>
