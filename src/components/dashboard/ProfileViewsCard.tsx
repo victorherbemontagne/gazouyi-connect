@@ -67,7 +67,7 @@ export default function ProfileViewsCard({ userId, isPublic, profileSlug }: Prof
 
   if (!isPublic) {
     return (
-      <Card className="shadow-sm border border-gazouyi-100">
+      <Card className="shadow-sm">
         <CardContent className="p-6">
           <div className="flex items-center">
             <div className="p-2 rounded-full bg-yellow-100 mr-4">
@@ -86,7 +86,7 @@ export default function ProfileViewsCard({ userId, isPublic, profileSlug }: Prof
   }
 
   return (
-    <Card className="shadow-sm border border-gazouyi-100 overflow-hidden">
+    <Card className="shadow-sm overflow-hidden">
       <CardContent className="p-6 bg-gradient-to-r from-blue-50 to-purple-50">
         <div className="flex flex-col md:flex-row gap-6">
           {/* Statistiques de vues */}
