@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPublicProfileBySlug } from '@/services/publicProfileService';
 import { Card, CardContent } from "@/components/ui/card";
-import { Briefcase, GraduationCap, MapPin, Calendar, Mail, Phone, User, Share2, Printer } from 'lucide-react';
+import { Briefcase, GraduationCap, MapPin, Calendar, User, Share2, Printer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
@@ -60,6 +60,7 @@ export default function PublicProfile() {
         if (!profile) {
           console.error('Profile not found or not public for slug:', slug);
           setError("Ce profil n'existe pas ou n'est pas public");
+          setLoading(false);
           return;
         }
         

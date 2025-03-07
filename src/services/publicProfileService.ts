@@ -18,14 +18,16 @@ export const getPublicProfileBySlug = async (slug: string) => {
       throw profileError;
     }
     
+    console.log('Profile query result:', profile);
+    
     if (!profile) {
       console.log('No profile found with slug:', slug);
       return { profile: null, experiences: [], academicCredentials: [] };
     }
     
     // Check if the profile is public
-    if (!profile.public_profile_enabled) {
-      console.log('Profile exists but is not public, slug:', slug);
+    if (profile.public_profile_enabled !== true) {
+      console.log('Profile exists but is not public, slug:', slug, 'Public status:', profile.public_profile_enabled);
       return { profile: null, experiences: [], academicCredentials: [] };
     }
     
@@ -64,6 +66,8 @@ export const getPublicProfileBySlug = async (slug: string) => {
       console.error('Error logging profile view:', viewError);
       // We don't throw here as this is not critical
     }
+    
+    console.log('Successfully returning profile data for:', profile.id);
     
     return {
       profile,
