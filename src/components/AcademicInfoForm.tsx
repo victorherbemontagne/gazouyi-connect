@@ -90,18 +90,24 @@ const AcademicInfoForm = ({ onComplete, calculateCompletion }: AcademicInfoFormP
     }
   };
 
-  const handleSubmit = () => {
-    // Appeler calculateCompletion pour mettre à jour le pourcentage avant de terminer l'étape
-    calculateCompletion();
-    
-    // Attendre que le calcul soit terminé avant d'appeler onComplete
-    setTimeout(() => {
+  const handleSubmit = async () => {
+    // Ensure we have at least one academic credential
+    if (academicCredentials.length === 0) {
       toast({
-        title: "Étape complétée !",
-        description: "Vos informations académiques ont été enregistrées avec succès.",
+        title: "Information manquante",
+        description: "Ajoutez au moins un diplôme ou une formation avant de terminer cette étape.",
+        variant: "destructive",
       });
+      return;
+    }
+    
+    // Call calculateCompletion to update the percentage before completing the step
+    await calculateCompletion();
+    
+    // Wait a bit to ensure the calculation is complete
+    setTimeout(() => {
       onComplete();
-    }, 300);
+    }, 500);
   };
 
   return (

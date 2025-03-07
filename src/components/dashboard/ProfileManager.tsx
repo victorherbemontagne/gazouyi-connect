@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { getProfileWithCounts } from '@/services/profileService';
+import { supabase } from '@/integrations/supabase/client';
 
 export function useProfileManager() {
   const { user } = useAuth();
@@ -36,7 +36,7 @@ export function useProfileManager() {
   };
 
   const handleStepComplete = async () => {
-    // Récupérer les données à jour avant de procéder
+    // Force a refetch of the profile data to ensure we have the most up-to-date completion percentage
     await fetchProfileData();
     
     // Afficher un toast de célébration pour l'étape complétée
@@ -50,6 +50,10 @@ export function useProfileManager() {
         break;
       case 3:
         stepName = "académiques";
+        // When completing the academic step, ensure we set the completion to 100%
+        if (completionPercentage >= 90) {
+          await updateProfileCompletionTo100();
+        }
         break;
     }
     
@@ -67,6 +71,26 @@ export function useProfileManager() {
         title: "Félicitations !",
         description: "Votre profil est maintenant complet !",
       });
+    }
+  };
+
+  // New function to ensure completion percentage is set to 100% when academic step is completed
+  const updateProfileCompletionTo100 = async () => {
+    if (!user?.id) return;
+    
+    try {
+      // Update the completion percentage directly in the database
+      const { error } = await supabase
+        .from('candidate_profiles')
+        .update({ profile_completion_percentage: 100 })
+        .eq('id', user.id);
+        
+      if (error) throw error;
+      
+      // Update local state
+      setCompletionPercentage(100);
+    } catch (error: any) {
+      console.error('Error updating completion percentage:', error.message);
     }
   };
 

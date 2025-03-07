@@ -38,6 +38,14 @@ export const calculateCompletionPercentage = (data: any, experiencesCount: numbe
   if (academicCredentialsCount > 0) {
     // Ajouter des points pour chaque diplôme, avec un maximum de 2
     completed += Math.min(academicCredentialsCount, maxCredentials);
+    
+    // Si on a complété toutes les étapes jusqu'aux diplômes (troisième étape),
+    // et qu'on a au moins un diplôme, on considère que le profil est complet
+    if (data.first_name && data.last_name && data.city && 
+        data.department && data.currently_employed !== null &&
+        experiencesCount > 0) {
+      return 100;
+    }
   }
   total += maxCredentials;
   
