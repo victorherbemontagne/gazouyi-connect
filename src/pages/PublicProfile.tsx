@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPublicProfileBySlug } from '@/services/publicProfileService';
@@ -25,6 +24,7 @@ interface AcademicCredential {
   institution: string | null;
   completion_date: string | null;
   description: string | null;
+  proof_document_url: string | null;
 }
 
 interface Profile {
