@@ -1,5 +1,5 @@
 
-import { GraduationCap, Calendar, FileCheck, CheckCircle } from 'lucide-react';
+import { GraduationCap, Calendar, CheckCircle } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -52,20 +52,6 @@ export const CredentialsList = ({ credentials }: CredentialsListProps) => {
                   <Badge variant="outline" className="bg-gazouyi-100 text-gazouyi-700 border-gazouyi-200">
                     {cred.credential_type === 'degree' ? 'Diplôme' : 'Formation'}
                   </Badge>
-                  
-                  {cred.proof_document_url && (
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 hover:bg-green-100">
-                      <a 
-                        href={cred.proof_document_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center"
-                      >
-                        <FileCheck className="h-3 w-3 mr-1" />
-                        Voir le document
-                      </a>
-                    </Badge>
-                  )}
                 </div>
                 {cred.description && (
                   <p className="text-gazouyi-600 mt-2 text-sm">{cred.description}</p>
