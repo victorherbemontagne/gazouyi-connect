@@ -1,7 +1,6 @@
-
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { EyeIcon, Share2, ArrowUpRight, Copy, Lightbulb } from 'lucide-react';
+import { EyeIcon, Share2, ArrowUpRight, Copy, Lightbulb, Check } from 'lucide-react';
 import { getProfileViewCount } from '@/services/publicProfileService';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from "@/components/ui/button";

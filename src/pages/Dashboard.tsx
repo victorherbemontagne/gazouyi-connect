@@ -7,7 +7,7 @@ import CompletionMessage from '@/components/dashboard/CompletionMessage';
 import { useProfileManager } from '@/components/dashboard/ProfileManager';
 import { CircleUserRound, Award, EyeIcon, CheckCircle, AlertCircle } from 'lucide-react';
 import Footer from '@/components/Footer';
-import { getProfileViewCount } from '@/services/publicProfileService';
+import ProfileViewsCard from '@/components/dashboard/ProfileViewsCard';
 
 export default function Dashboard() {
   const { user } = useAuth();
