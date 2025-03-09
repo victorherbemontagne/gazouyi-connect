@@ -62,6 +62,14 @@ export const CredentialsList = ({ credentials }: CredentialsListProps) => {
         ) : (
           <p className="text-gazouyi-500 italic">Aucun diplôme ou formation ajouté</p>
         )}
+        
+        <div className="mt-6 text-xs text-gazouyi-500 bg-gazouyi-50 p-3 rounded-md">
+          <span className="flex items-center">
+            <CheckCircle className="h-3 w-3 text-green-500 mr-1 inline" />
+            <span className="text-green-600 font-medium">Vérifié</span>
+            <span className="ml-1">signifie que l'utilisateur a fourni une copie de son diplôme comme preuve.</span>
+          </span>
+        </div>
       </CardContent>
     </Card>
   );
