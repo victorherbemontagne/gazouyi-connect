@@ -7,7 +7,8 @@
 export const getBaseUrl = (): string => {
   // In development, use the current window location
   if (import.meta.env.DEV) {
-    return window.location.origin;
+    return 'https://connect.gazouyi.com';
+    //return window.location.origin;
   }
   // In production, use the production domain
   return 'https://connect.gazouyi.com';
