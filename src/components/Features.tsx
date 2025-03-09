@@ -1,6 +1,7 @@
 
 import { cn } from "@/lib/utils";
 import { useEffect, useRef } from "react";
+import { Download, Printer } from "lucide-react";
 
 interface FeaturesProps {
   className?: string;
@@ -33,17 +34,32 @@ const Features = ({ className }: FeaturesProps) => {
     {
       title: "Présentation professionnelle",
       description: "Créez une page attrayante qui met en valeur votre expérience et vos qualifications.",
-      delay: 100
+      delay: 100,
+      icon: null
     },
     {
       title: "Portfolio de compétences",
       description: "Présentez vos compétences spécifiques et les domaines dans lesquels vous excellez.",
-      delay: 200
+      delay: 200,
+      icon: null
     },
     {
       title: "Accompagnement VAE",
       description: "Bénéficiez de conseils pour valoriser votre parcours dans le cadre d'une VAE.",
-      delay: 300
+      delay: 300,
+      icon: null
+    },
+    {
+      title: "Téléchargement des diplômes",
+      description: "Stockez vos diplômes et attestations de formation dans un espace sécurisé.",
+      delay: 400,
+      icon: <Download className="h-5 w-5 text-white" />
+    },
+    {
+      title: "CV digital imprimable",
+      description: "Générez un CV professionnel à partir de votre profil, prêt à imprimer ou à partager.",
+      delay: 500,
+      icon: <Printer className="h-5 w-5 text-white" />
     }
   ];
 
@@ -71,7 +87,13 @@ const Features = ({ className }: FeaturesProps) => {
               style={{ animationDelay: `${feature.delay}ms` }}
             >
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-                <div className="w-6 h-6 rounded-full bg-custom-primary" />
+                {feature.icon ? (
+                  <div className="w-6 h-6 rounded-full bg-custom-primary flex items-center justify-center">
+                    {feature.icon}
+                  </div>
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-custom-primary" />
+                )}
               </div>
               <h3 className="text-xl font-semibold text-custom-primary mb-2">{feature.title}</h3>
               <p className="text-gray-600">{feature.description}</p>
