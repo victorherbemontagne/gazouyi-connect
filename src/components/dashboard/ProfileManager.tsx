@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,6 +21,16 @@ export function useProfileManager() {
       console.log('Fetching profile for user:', user.id);
       
       const { profile, completionPercentage } = await getProfileWithCounts(user.id);
+      
+      // Get profile view count and add it to the profile data
+      if (profile) {
+        const { count } = await supabase
+          .from('profile_views')
+          .select('*', { count: 'exact', head: true })
+          .eq('profile_id', user.id);
+          
+        profile.profile_views = count || 0;
+      }
       
       setProfileData(profile);
       setCompletionPercentage(completionPercentage);

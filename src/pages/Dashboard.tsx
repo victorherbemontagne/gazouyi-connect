@@ -71,7 +71,7 @@ export default function Dashboard() {
               <div>
                 <h3 className="text-xs font-medium text-gazouyi-500">Visites du profil</h3>
                 {profileData?.public_profile_enabled ? (
-                  <p className="text-sm font-semibold">{profileData?.viewCount || 0} visites</p>
+                  <p className="text-sm font-semibold">{profileData?.profile_views || 0} visites</p>
                 ) : (
                   <p className="text-sm font-semibold text-gazouyi-500">Page pas encore publiée</p>
                 )}
@@ -88,13 +88,13 @@ export default function Dashboard() {
                 <div className="flex justify-between items-center">
                   <p className="text-sm font-semibold">100 vues</p>
                   <span className="text-xs text-gazouyi-500">
-                    {profileData?.viewCount || 0}/100
+                    {profileData?.profile_views || 0}/100
                   </span>
                 </div>
                 <div className="w-full bg-gazouyi-100 rounded-full h-1.5 mt-1">
                   <div 
                     className="bg-gradient-to-r from-gazouyi-500 to-custom-accent2 h-1.5 rounded-full" 
-                    style={{ width: `${Math.min(100, ((profileData?.viewCount || 0) / 100) * 100)}%` }}
+                    style={{ width: `${Math.min(100, ((profileData?.profile_views || 0) / 100) * 100)}%` }}
                   ></div>
                 </div>
               </div>
