@@ -1,14 +1,18 @@
+
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { EyeIcon, Share2, ArrowUpRight, Copy, Lightbulb } from 'lucide-react';
 import { getProfileViewCount } from '@/services/publicProfileService';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from "@/components/ui/button";
+import { getFullUrl } from '@/utils/environment';
+
 interface ProfileViewsCardProps {
   userId: string;
   isPublic: boolean;
   profileSlug?: string;
 }
+
 export default function ProfileViewsCard({
   userId,
   isPublic,
@@ -17,9 +21,8 @@ export default function ProfileViewsCard({
   const [viewCount, setViewCount] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [isCopied, setIsCopied] = useState(false);
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+
   useEffect(() => {
     const fetchViewCount = async () => {
       if (!userId) return;
@@ -40,11 +43,11 @@ export default function ProfileViewsCard({
     };
     fetchViewCount();
   }, [userId, toast]);
+
   const handleCopyLink = async () => {
     if (!isPublic || !profileSlug) return;
     try {
-      const origin = window.location.origin;
-      const profileLink = `${origin}/profile/${profileSlug}`;
+      const profileLink = getFullUrl(`profile/${profileSlug}`);
       await navigator.clipboard.writeText(profileLink);
       setIsCopied(true);
       toast({
@@ -60,6 +63,7 @@ export default function ProfileViewsCard({
       });
     }
   };
+
   if (!isPublic) {
     return <Card className="shadow-sm">
         <CardContent className="p-6">
@@ -77,6 +81,7 @@ export default function ProfileViewsCard({
         </CardContent>
       </Card>;
   }
+
   return <Card className="shadow-sm overflow-hidden">
       
     </Card>;

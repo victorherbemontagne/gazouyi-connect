@@ -6,6 +6,7 @@ import { CircleCheck, Sparkles, CheckCheck, Star, Medal, Edit2, Briefcase, Gradu
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { getFullUrl } from '@/utils/environment';
 
 export default function CompletionMessage() {
   const navigate = useNavigate();

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Globe, Copy } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
@@ -6,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import { getFullUrl } from '@/utils/environment';
 
 interface ProfileVisibilityToggleProps {
   profileData: any;
@@ -51,8 +51,7 @@ const ProfileVisibilityToggle = ({
   };
 
   const getPublicProfileUrl = () => {
-    const baseUrl = window.location.origin;
-    return `${baseUrl}/profile/${profileSlug}`;
+    return getFullUrl(`profile/${profileSlug}`);
   };
 
   const handleCopyProfileLink = async () => {
