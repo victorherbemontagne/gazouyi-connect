@@ -37,8 +37,16 @@ export default function Dashboard() {
       <main className="py-10 px-4 md:py-12 flex-grow">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center mb-8 space-x-3">
-            <div className="bg-gazouyi-100 p-2 rounded-full">
-              <CircleUserRound className="h-6 w-6 text-gazouyi-700" />
+            <div className="bg-gazouyi-100 p-2 rounded-full overflow-hidden w-10 h-10 flex items-center justify-center">
+              {profileData?.profile_photo_url ? (
+                <img 
+                  src={profileData.profile_photo_url} 
+                  alt="Photo de profil" 
+                  className="h-full w-full object-cover rounded-full"
+                />
+              ) : (
+                <CircleUserRound className="h-6 w-6 text-gazouyi-700" />
+              )}
             </div>
             <h1 className="text-3xl font-bold text-gazouyi-900 bg-gradient-to-r from-gazouyi-800 to-gazouyi-600 bg-clip-text text-transparent">
               Votre espace personnel
