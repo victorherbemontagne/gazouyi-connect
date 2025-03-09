@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, User, MapPin, Link, Share2 } from "lucide-react";
+import { Upload, User, MapPin, Link, Share2, Loader2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
@@ -34,6 +35,7 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
   const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [formData, setFormData] = useState({
     first_name: initialData.first_name || "",
     last_name: initialData.last_name || "",
@@ -78,6 +80,58 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
     }
   };
 
+  const handleUploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0 || !user?.id) {
+      return;
+    }
+
+    const file = files[0];
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${user.id}/${Date.now()}.${fileExt}`;
+
+    try {
+      setUploadingPhoto(true);
+      
+      // Upload the file to Supabase Storage
+      const { error: uploadError, data } = await supabase.storage
+        .from('profile_photos')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get the public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('profile_photos')
+        .getPublicUrl(filePath);
+
+      // Update form data with the new photo URL
+      setFormData({
+        ...formData,
+        profile_photo_url: publicUrl
+      });
+
+      toast({
+        title: "Photo téléchargée",
+        description: "Votre photo de profil a été téléchargée avec succès.",
+      });
+    } catch (error: any) {
+      console.error('Error uploading photo:', error);
+      toast({
+        title: "Erreur",
+        description: `Échec du téléchargement de la photo: ${error.message}`,
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingPhoto(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -115,15 +169,6 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleUploadPhoto = async () => {
-    // This is a placeholder for photo upload functionality
-    // In a real implementation, you would integrate with Supabase Storage
-    toast({
-      title: "Fonctionnalité à venir",
-      description: "L'upload de photo sera disponible prochainement.",
-    });
   };
 
   // Liste des départements français
@@ -329,16 +374,34 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
                   <User className="h-12 w-12 text-gazouyi-400" />
                 )}
               </div>
-              <Button 
-                type="button" 
-                onClick={handleUploadPhoto}
-                variant="outline" 
-                className="ml-5"
+              <label 
+                htmlFor="photo-upload" 
+                className={`ml-5 inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 ${uploadingPhoto ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
               >
-                <Upload className="mr-2 h-4 w-4" />
-                Choisir une photo
-              </Button>
+                {uploadingPhoto ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Téléchargement...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Choisir une photo
+                  </>
+                )}
+                <input 
+                  type="file" 
+                  id="photo-upload" 
+                  accept="image/*" 
+                  className="hidden" 
+                  onChange={handleUploadPhoto}
+                  disabled={uploadingPhoto}
+                />
+              </label>
             </div>
+            <p className="mt-1 text-xs text-gazouyi-500">
+              Formats acceptés: JPG, PNG. Taille max: 5MB
+            </p>
           </div>
           
           {/* Public profile settings */}
