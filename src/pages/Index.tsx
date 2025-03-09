@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -6,10 +5,10 @@ import Footer from "@/components/Footer";
 import Button from "@/components/Button";
 import { useAuth } from "@/contexts/AuthContext";
 import NextStepsCard from "@/components/dashboard/NextStepsCard";
-
 const Index = () => {
-  const { session } = useAuth();
-  
+  const {
+    session
+  } = useAuth();
   useEffect(() => {
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -28,17 +27,11 @@ const Index = () => {
       });
     });
   }, []);
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <header className="py-4 px-6 border-b border-gazouyi-100 sticky top-0 bg-white/80 backdrop-blur-sm z-50">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div>
-            <img 
-              src="/lovable-uploads/d66888ab-cdcf-4c38-a6e4-85c1c632c6ae.png" 
-              alt="Gazouyi Connect Logo" 
-              className="h-10 md:h-12"
-            />
+            <img src="/lovable-uploads/d66888ab-cdcf-4c38-a6e4-85c1c632c6ae.png" alt="Gazouyi Connect Logo" className="h-10 md:h-12" />
           </div>
           <nav className="hidden md:flex space-x-8 items-center">
             <a href="#features" className="text-gazouyi-700 hover:text-gazouyi-900 transition-colors">
@@ -47,17 +40,11 @@ const Index = () => {
             <a href="#" className="text-gazouyi-700 hover:text-gazouyi-900 transition-colors">
               VAE
             </a>
-            <Button 
-              href={session ? "/dashboard" : "/auth"}
-              icon
-            >
+            <Button href={session ? "/dashboard" : "/auth"} icon>
               {session ? "Mon espace" : "Démarrer"}
             </Button>
           </nav>
-          <Button 
-            href={session ? "/dashboard" : "/auth"}
-            className="md:hidden"
-          >
+          <Button href={session ? "/dashboard" : "/auth"} className="md:hidden">
             {session ? "Mon espace" : "Démarrer"}
           </Button>
         </div>
@@ -105,14 +92,7 @@ const Index = () => {
         <Features />
         
         {/* Next Steps Section */}
-        <div className="bg-gazouyi-50 py-16 px-4">
-          <div className="max-w-4xl mx-auto section-transition">
-            <h2 className="text-2xl md:text-3xl font-bold text-gazouyi-900 mb-6 text-center">
-              Les prochaines étapes pour valoriser votre parcours
-            </h2>
-            <NextStepsCard />
-          </div>
-        </div>
+        
 
         <div className="bg-gazouyi-50 py-20 px-4">
           <div className="max-w-4xl mx-auto text-center section-transition">
@@ -123,11 +103,7 @@ const Index = () => {
               Rejoignez la communauté Gazouyi Connect et créez votre page professionnelle 
               en quelques minutes. C'est simple, rapide et valorisant !
             </p>
-            <Button 
-              href={session ? "/dashboard" : "/auth"}
-              icon 
-              className="text-lg px-8 py-4"
-            >
+            <Button href={session ? "/dashboard" : "/auth"} icon className="text-lg px-8 py-4">
               {session ? "Accéder à mon espace" : "Démarrer maintenant"}
             </Button>
           </div>
@@ -135,8 +111,6 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
