@@ -155,8 +155,21 @@ export default function PublicProfile() {
               {profile.profile_photo_url ? (
                 <img 
                   src={profile.profile_photo_url} 
-                  alt={fullName} 
+                  alt={fullName}
                   className="h-full w-full object-cover"
+                  onError={(e) => {
+                    // If image fails to load, show placeholder
+                    (e.target as HTMLImageElement).src = '';
+                    (e.target as HTMLImageElement).onerror = null;
+                    (e.target as HTMLImageElement).classList.add('bg-gazouyi-100');
+                    const parent = (e.target as HTMLImageElement).parentElement;
+                    if (parent) {
+                      const placeholderIcon = document.createElement('div');
+                      placeholderIcon.className = 'h-full w-full flex items-center justify-center';
+                      placeholderIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-16 w-16 text-gazouyi-400 print:h-12 print:w-12"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+                      parent.appendChild(placeholderIcon);
+                    }
+                  }}
                 />
               ) : (
                 <div className="h-full w-full flex items-center justify-center bg-gazouyi-100">
