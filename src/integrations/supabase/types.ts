@@ -17,6 +17,7 @@ export type Database = {
           description: string | null
           id: string
           institution: string | null
+          proof_document_url: string | null
           title: string
           updated_at: string | null
           user_id: string
@@ -28,6 +29,7 @@ export type Database = {
           description?: string | null
           id?: string
           institution?: string | null
+          proof_document_url?: string | null
           title: string
           updated_at?: string | null
           user_id: string
@@ -39,6 +41,7 @@ export type Database = {
           description?: string | null
           id?: string
           institution?: string | null
+          proof_document_url?: string | null
           title?: string
           updated_at?: string | null
           user_id?: string

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,8 +11,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Calendar } from '@/components/ui/calendar';
 import { fr } from 'date-fns/locale';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, FileCheck, Upload, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getFullUrl } from '@/utils/environment';
 
 interface AcademicCredentialFormProps {
   initialData?: {
@@ -21,6 +23,7 @@ interface AcademicCredentialFormProps {
     institution?: string | null;
     completion_date?: string | null;
     description?: string | null;
+    proof_document_url?: string | null;
   };
   onCancel: () => void;
   onSave: () => void;
@@ -39,6 +42,7 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
   const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploadLoading, setUploadLoading] = useState(false);
   
   const [formData, setFormData] = useState({
     credential_type: initialData?.credential_type || 'degree',
@@ -46,7 +50,12 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
     institution: initialData?.institution || '',
     completion_date: initialData?.completion_date ? new Date(initialData.completion_date) : undefined,
     description: initialData?.description || '',
+    proof_document_url: initialData?.proof_document_url || '',
   });
+
+  const [filePreview, setFilePreview] = useState<{ name: string; size: string } | null>(
+    formData.proof_document_url ? { name: 'Document existant', size: '' } : null
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,6 +71,83 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
 
   const handleTitleChange = (value: string) => {
     setFormData({ ...formData, title: value });
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.id) return;
+
+    // Vérifier la taille du fichier (limite à 5 Mo)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Fichier trop volumineux",
+        description: "La taille du fichier ne doit pas dépasser 5 Mo.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Vérifier le type de fichier (PDF ou images)
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Type de fichier non pris en charge",
+        description: "Veuillez télécharger un fichier PDF ou une image (JPEG, PNG).",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      setUploadLoading(true);
+      
+      // Générer un nom de fichier unique
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+      
+      // Télécharger le fichier
+      const { error: uploadError, data } = await supabase.storage
+        .from('credential_proofs')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+        
+      if (uploadError) throw uploadError;
+
+      // Obtenir l'URL publique
+      const { data: { publicUrl } } = supabase.storage
+        .from('credential_proofs')
+        .getPublicUrl(filePath);
+        
+      // Mettre à jour l'état
+      setFormData({ ...formData, proof_document_url: publicUrl });
+      
+      // Afficher l'aperçu du fichier
+      const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+      setFilePreview({ name: file.name, size: fileSize });
+      
+      toast({
+        title: "Document téléchargé",
+        description: "Votre document a été téléchargé avec succès.",
+        variant: "default",
+      });
+    } catch (error: any) {
+      console.error('Erreur lors du téléchargement:', error);
+      toast({
+        title: "Erreur de téléchargement",
+        description: error.message || "Une erreur s'est produite lors du téléchargement du document.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setFormData({ ...formData, proof_document_url: '' });
+    setFilePreview(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,6 +166,7 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
         institution: formData.institution,
         completion_date: formData.completion_date ? format(formData.completion_date, 'yyyy-MM-dd') : null,
         description: formData.description,
+        proof_document_url: formData.proof_document_url || null,
       };
       
       if (initialData?.id) {
@@ -235,11 +322,62 @@ const AcademicCredentialForm = ({ initialData, onCancel, onSave }: AcademicCrede
         />
       </div>
       
+      {/* Ajout du champ pour télécharger un document */}
+      <div className="space-y-2">
+        <Label htmlFor="proof_document">Document justificatif (facultatif)</Label>
+        {filePreview ? (
+          <div className="flex items-center gap-2 p-2 border rounded-md bg-gray-50">
+            <FileCheck className="h-5 w-5 text-green-500" />
+            <div className="flex-1 overflow-hidden">
+              <p className="text-sm font-medium truncate">{filePreview.name}</p>
+              {filePreview.size && <p className="text-xs text-muted-foreground">{filePreview.size}</p>}
+            </div>
+            <Button 
+              type="button" 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleRemoveFile}
+              className="h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center w-full">
+            <label htmlFor="proof_document" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-md border-gray-300 hover:border-gazouyi-400 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <Upload className="w-8 h-8 mb-2 text-gray-500" />
+                <p className="mb-1 text-sm text-gray-500">
+                  <span className="font-semibold">Cliquez pour télécharger</span> ou glissez-déposez
+                </p>
+                <p className="text-xs text-gray-500">PDF, PNG ou JPG (max. 5MB)</p>
+              </div>
+              <Input
+                id="proof_document"
+                type="file"
+                className="hidden"
+                accept=".pdf,.png,.jpg,.jpeg"
+                onChange={handleFileUpload}
+                disabled={uploadLoading}
+              />
+            </label>
+          </div>
+        )}
+        {uploadLoading && (
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-gazouyi-500"></div>
+          </div>
+        )}
+        <p className="text-xs text-muted-foreground">
+          Ajoutez une copie de votre diplôme ou attestation pour renforcer votre profil
+        </p>
+      </div>
+      
       <div className="flex justify-end gap-2 pt-4">
         <Button type="button" variant="outline" onClick={onCancel}>
           Annuler
         </Button>
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" disabled={loading || uploadLoading}>
           {loading ? "Enregistrement..." : initialData ? "Mettre à jour" : "Ajouter"}
         </Button>
       </div>

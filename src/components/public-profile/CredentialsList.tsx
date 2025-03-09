@@ -1,5 +1,5 @@
 
-import { GraduationCap, Calendar } from 'lucide-react';
+import { GraduationCap, Calendar, FileCheck } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 
 interface AcademicCredential {
@@ -9,6 +9,7 @@ interface AcademicCredential {
   institution: string | null;
   completion_date: string | null;
   description: string | null;
+  proof_document_url: string | null;
 }
 
 interface CredentialsListProps {
@@ -28,7 +29,20 @@ export const CredentialsList = ({ credentials }: CredentialsListProps) => {
           <div className="space-y-6">
             {credentials.map((cred) => (
               <div key={cred.id} className="border-l-2 border-gazouyi-200 pl-4 pb-2">
-                <h3 className="font-semibold text-gazouyi-800">{cred.title}</h3>
+                <h3 className="font-semibold text-gazouyi-800">
+                  {cred.title}
+                  {cred.proof_document_url && (
+                    <a 
+                      href={cred.proof_document_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center ml-2 text-xs text-gazouyi-600 hover:text-gazouyi-800"
+                    >
+                      <FileCheck className="h-3.5 w-3.5 text-green-500 mr-1" />
+                      <span>Voir le document</span>
+                    </a>
+                  )}
+                </h3>
                 {cred.institution && (
                   <p className="text-gazouyi-600">{cred.institution}</p>
                 )}
