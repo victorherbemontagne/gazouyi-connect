@@ -33,6 +33,19 @@ export default function ProfileContent({
     }
   }, [profileData]);
 
+  // Add event listener for the custom event
+  useEffect(() => {
+    const handleShowProfileForm = (event: CustomEvent) => {
+      setShowFormWhenComplete(event.detail.show);
+    };
+
+    window.addEventListener('showProfileForm', handleShowProfileForm as EventListener);
+    
+    return () => {
+      window.removeEventListener('showProfileForm', handleShowProfileForm as EventListener);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="flex justify-center py-12">

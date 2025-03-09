@@ -57,6 +57,11 @@ export default function CompletionMessage() {
     }
   };
   
+  const handleEditProfile = () => {
+    // This will trigger the profile form to be shown in the Dashboard
+    const event = new CustomEvent('showProfileForm', { detail: { show: true } });
+    window.dispatchEvent(event);
+  };
   
   return (
     <div className="bg-gradient-to-br from-green-50 to-gazouyi-50 border border-green-200 rounded-xl p-8 text-center relative overflow-hidden shadow-md my-6">
@@ -107,7 +112,7 @@ export default function CompletionMessage() {
           <Button 
             variant="outline" 
             className="mt-auto w-full border-green-600 text-green-600 hover:bg-green-50"
-            onClick={() => navigate('/dashboard')}
+            onClick={handleEditProfile}
           >
             Modifier mon profil
           </Button>
