@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, User, MapPin, Link, Share2, Loader2 } from "lucide-react";
+import { Upload, User, MapPin, Link, Share2, Loader2, GraduationCap } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
@@ -26,6 +25,8 @@ interface PersonalInfoFormProps {
     profile_photo_url?: string | null;
     public_profile_enabled?: boolean | null;
     unique_profile_slug?: string | null;
+    vae_in_progress?: boolean | null;
+    vae_diploma_type?: string | null;
   };
   onComplete: () => void;
   calculateCompletion: () => void;
@@ -44,6 +45,8 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
     profile_photo_url: initialData.profile_photo_url || "",
     public_profile_enabled: initialData.public_profile_enabled || false,
     unique_profile_slug: initialData.unique_profile_slug || "",
+    vae_in_progress: initialData.vae_in_progress || false,
+    vae_diploma_type: initialData.vae_diploma_type || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +59,19 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
 
   const handleSwitchChange = (checked: boolean) => {
     setFormData({ ...formData, public_profile_enabled: checked });
+  };
+
+  const handleVaeSwitchChange = (checked: boolean) => {
+    setFormData({ 
+      ...formData, 
+      vae_in_progress: checked,
+      // Clear diploma type if VAE is disabled
+      vae_diploma_type: checked ? formData.vae_diploma_type : "" 
+    });
+  };
+
+  const handleVaeDiplomaChange = (value: string) => {
+    setFormData({ ...formData, vae_diploma_type: value });
   };
 
   const getPublicProfileUrl = () => {
@@ -148,6 +164,8 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
           department: formData.department,
           profile_photo_url: formData.profile_photo_url,
           public_profile_enabled: formData.public_profile_enabled,
+          vae_in_progress: formData.vae_in_progress,
+          vae_diploma_type: formData.vae_diploma_type,
         })
         .eq("id", user.id);
 
@@ -356,6 +374,56 @@ const PersonalInfoForm = ({ initialData, onComplete, calculateCompletion }: Pers
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          
+          {/* VAE Section */}
+          <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-100">
+            <div className="flex items-start mb-4">
+              <div className="mr-2 mt-0.5">
+                <GraduationCap className="h-5 w-5 text-amber-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-gazouyi-800">VAE (Validation des Acquis de l'Expérience)</h3>
+                <p className="text-sm text-gazouyi-600">Indiquez si vous êtes actuellement en démarche VAE</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center mb-4">
+              <Switch 
+                id="vae_in_progress" 
+                checked={formData.vae_in_progress}
+                onCheckedChange={handleVaeSwitchChange}
+                className="mr-2"
+              />
+              <Label htmlFor="vae_in_progress">
+                Je suis actuellement en démarche VAE
+              </Label>
+            </div>
+            
+            {formData.vae_in_progress && (
+              <div className="mt-3 pl-8">
+                <label htmlFor="vae_diploma_type" className="block text-sm font-medium text-gazouyi-700 mb-1">
+                  Diplôme préparé
+                </label>
+                <Select 
+                  value={formData.vae_diploma_type} 
+                  onValueChange={handleVaeDiplomaChange}
+                  required={formData.vae_in_progress}
+                >
+                  <SelectTrigger id="vae_diploma_type" className="w-full max-w-md">
+                    <SelectValue placeholder="Sélectionner le diplôme préparé" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="CAP_AEPE">CAP AEPE</SelectItem>
+                    <SelectItem value="AP">Auxiliaire de Puériculture (AP)</SelectItem>
+                    <SelectItem value="EJE">Éducateur de Jeunes Enfants (EJE)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="mt-2 text-xs text-amber-600">
+                  Cette information apparaîtra sur votre profil public sous forme de badge
+                </p>
+              </div>
+            )}
           </div>
           
           <div className="mt-4">

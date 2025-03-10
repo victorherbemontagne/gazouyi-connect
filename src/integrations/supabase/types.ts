@@ -66,6 +66,8 @@ export type Database = {
           public_profile_enabled: boolean | null
           unique_profile_slug: string | null
           updated_at: string | null
+          vae_diploma_type: string | null
+          vae_in_progress: boolean | null
         }
         Insert: {
           city?: string | null
@@ -84,6 +86,8 @@ export type Database = {
           public_profile_enabled?: boolean | null
           unique_profile_slug?: string | null
           updated_at?: string | null
+          vae_diploma_type?: string | null
+          vae_in_progress?: boolean | null
         }
         Update: {
           city?: string | null
@@ -102,6 +106,8 @@ export type Database = {
           public_profile_enabled?: boolean | null
           unique_profile_slug?: string | null
           updated_at?: string | null
+          vae_diploma_type?: string | null
+          vae_in_progress?: boolean | null
         }
         Relationships: []
       }
