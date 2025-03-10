@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPublicProfileBySlug } from '@/services/publicProfileService';
@@ -39,6 +40,8 @@ interface Profile {
   current_job_duration: string | null;
   current_job_description: string | null;
   public_profile_enabled: boolean | null;
+  vae_in_progress: boolean | null;
+  vae_diploma_type: string | null;
 }
 
 export default function PublicProfile() {
